@@ -1,6 +1,6 @@
 import unittest
 from src.heroine import Heroine
-
+from pygame import sprite
 
 class HeroineTest(unittest.TestCase):
     def setUp(self):
@@ -15,6 +15,7 @@ class HeroineTest(unittest.TestCase):
 
     def test_invulnerable(self):
         self.fail()
+
 
 class HeroineFocus(unittest.TestCase):
     def setUp(self):
@@ -40,22 +41,37 @@ class HeroineFocus(unittest.TestCase):
 class HeroineMove(unittest.TestCase):
     def setUp(self):
         self.heroine = Heroine()
+        self.heroine.pos = (100, 500)
+        self.heroine.speed = 10
+
+    def test_set_pos(self):
+        self.assertEqual(self.heroine.rect.center, (100, 500))
+        self.assertEqual(self.heroine.hitbox.rect.center, (100, 500))
+
+    def _test_move(self, expected_pos):
+        self.assertEqual(self.heroine.pos, expected_pos)
+        self.assertEqual(self.heroine.rect.center, expected_pos)
+        self.assertEqual(self.heroine.hitbox.rect.center, expected_pos)
 
     def test_move_up(self):
         self.heroine.move(self.heroine.UP)
-        self.fail()
+        expected_pos = (100, 500 - self.heroine.speed)
+        self._test_move(expected_pos)
 
     def test_move_down(self):
         self.heroine.move(self.heroine.DOWN)
-        self.fail()
+        expected_pos = (100, 500 + self.heroine.speed)
+        self._test_move(expected_pos)
 
     def test_move_left(self):
         self.heroine.move(self.heroine.LEFT)
-        self.fail()
+        expected_pos = (100 - self.heroine.speed, 500)
+        self._test_move(expected_pos)
 
     def test_move_right(self):
         self.heroine.move(self.heroine.RIGHT)
-        self.fail()
+        expected_pos = (100 + self.heroine.speed, 500)
+        self._test_move(expected_pos)
 
     def test_top_boundary(self):
         self.heroine.move(self.heroine.UP)
