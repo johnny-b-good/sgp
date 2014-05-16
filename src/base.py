@@ -15,7 +15,7 @@ clock = pygame.time.Clock()
 
 field = pygame.sprite.Sprite()
 field.rect = Rect(0, 0, 800, 600)
-reimu = Heroine(field_ref=field, speed=10)
+reimu = Heroine(field_ref=field, speed=4)
 heroine_group = pygame.sprite.Group(reimu)
 hitbox_group = pygame.sprite.Group(reimu.hitbox)
 
@@ -58,25 +58,6 @@ while True:
         reimu.move(reimu.RIGHT)
     else:
         pass
-
-
-        # elif event.type == KEYDOWN and event.key == K_UP:
-        #     reimu.move(reimu.UP)
-        # elif event.type == KEYDOWN and event.key == K_DOWN:
-        #     reimu.move(reimu.DOWN)
-        # elif event.type == KEYDOWN and event.key == K_LEFT:
-        #     reimu.move(reimu.LEFT)
-        # elif event.type == KEYDOWN and event.key == K_RIGHT:
-        #     reimu.move(reimu.RIGHT)
-        #
-        # elif event.type == KEYDOWN and event.key == K_LEFT and event.key == K_UP:
-        #     reimu.move(reimu.LEFT_UP)
-        # elif event.type == KEYDOWN and event.key == K_LEFT and event.key == K_DOWN:
-        #     reimu.move(reimu.LEFT_DOWN)
-        # elif event.type == KEYDOWN and event.key == K_RIGHT and event.key == K_UP:
-        #     reimu.move(reimu.RIGHT_UP)
-        # elif event.type == KEYDOWN and event.key == K_RIGHT and event.key == K_DOWN:
-        #     reimu.move(reimu.RIGHT_DOWN)
 
     pygame.display.flip()
 
