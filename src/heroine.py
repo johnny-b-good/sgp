@@ -6,7 +6,11 @@ from pygame.sprite import Sprite
 from pygame.rect import Rect
 import math
 
+
 class Heroine(Sprite):
+    # TODO - Clear up directions
+    # TODO - Move input events handling here
+    # TODO - hitbox optimize
     UP = (0, -1)
     DOWN = (0, 1)
     LEFT = (-1, 0)
