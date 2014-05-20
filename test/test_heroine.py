@@ -1,23 +1,33 @@
 import unittest
-from src.heroine import Heroine
-from pygame.sprite import Sprite
+import pygame
+from pygame.sprite import Sprite, Group
 from pygame.rect import Rect
+from src.heroine import Heroine
+from src.helpers import *
 
 
 class HeroineTest(unittest.TestCase):
     def setUp(self):
         self.field = Sprite()
         self.field.rect = Rect(0, 0, 1000, 1000)
+        self.shots_group = Group()
 
-        self.heroine = Heroine(
-            sprite_size=(50, 50),
-            hitbox_size=(20, 20),
-            speed = 10,
-            focus_coefficient=0.5,
-            lives=3,
-            bombs=3,
-            field_ref=self.field
-        )
+        self.params = {
+            'pos': (100, 500),
+            'sprite_size': (50, 50),
+            'hitbox_size': (20, 20),
+            'sprite_image': image_path('reimu.png'),
+            'hitbox_image': image_path('hitbox.png'),
+            'speed': 10,
+            'focus_coefficient': 0.5,
+            'lives': 3,
+            'bombs': 3,
+
+            'field_ref': self.field,
+            'shots_group_ref': self.shots_group,
+        }
+
+        self.heroine = Heroine(self.params)
 
     def test_set_pos(self):
         self.heroine.pos = (100, 500)
@@ -100,7 +110,12 @@ class HeroineTest(unittest.TestCase):
         self.fail()
 
     def test_shoot(self):
+        self.assertEqual(len(self.heroine.shots_group_ref), 0, 'Shots group wasn\'t empty at start')
+        # self.heroine.shoot(1000)
+        # print self.heroine.shots_group_ref
+        # self.assertEqual(len(self.heroine.shots_group_ref), 5, 'There should be 5 shots after 1 second of shooting')
         self.fail()
+
 
 
 

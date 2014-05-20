@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import math
 import pygame
 from pygame.sprite import Sprite
 from pygame.rect import Rect
-import math
+
+import projectile
 
 
 class Heroine(Sprite):
     # TODO - Clear up directions
     # TODO - Move input events handling here
-    # TODO - hitbox optimize
+    # TODO - hitbox optimize, separate class
     UP = (0, -1)
     DOWN = (0, 1)
     LEFT = (-1, 0)
@@ -23,33 +25,44 @@ class Heroine(Sprite):
     MAX_LIVES = 9
     MAX_BOMBS = 9
 
-    def __init__(self,
-                 sprite_size=(50, 50),
-                 hitbox_size=(20, 20),
-                 speed=10,
-                 focus_coefficient=0.5,
-                 lives=3,
-                 bombs=3,
-                 field_ref = None):
+    def __init__(self, params):
         super(Heroine, self).__init__()
-        self.rect = Rect((100, 500), sprite_size)
-        self.image = pygame.image.load('gfx/reimu.png').convert()
-        self.speed = speed
-        self._base_speed = speed
-        self.focus_coefficient = focus_coefficient
+        # Sprite's rect
+        self.rect = Rect((0, 0), params['sprite_size'])
+        # Create hitbox sprite
+        self.hitbox = self._create_hitbox(params['hitbox_size'], params['hitbox_image'])
+        # Set heroine's coordinates
+        self.pos = params['pos']
+        # Load sprite's image
+        self.image = pygame.image.load(params['sprite_image']).convert()
+        # Heroine's current speed
+        self.speed = params['speed']
+        # Heroine's base speed
+        self._base_speed = self.speed
+        # Focus coefficient defines how speed changes in the focused mode
+        self.focus_coefficient = params['focus_coefficient']
+        # Is heroine focused
         self.is_focused = False
-        self.hitbox = self._create_hitbox(hitbox_size)
-        self.lives = lives
-        self.bombs = bombs
-        self.field_ref = field_ref
+        # Number of lives
+        self.lives = params['lives']
+        # Number of bombs
+        self.bombs = params['bombs']
+        # Reference to playfield object
+        self.field_ref = params['field_ref']
+        # Reference to heroine's shots Group
+        self.shots_group_ref = params['shots_group_ref']
+        # Initialize shot classes
+        projectile.HeroineBasicShot.setup_class_attrs()
+        #
+        self.shot_timer = 0
 
-    def _create_hitbox(self, hitbox_size):
+    def _create_hitbox(self, hitbox_size, image):
         """Create heroine's hitbox sprite"""
         hitbox = Sprite()
         hitbox.rect = Rect((0, 0), hitbox_size)
         hitbox.rect.center = self.pos
 
-        hitbox.image = pygame.image.load('gfx/hitbox.png').convert()
+        hitbox.image = pygame.image.load(image).convert()
         return hitbox
 
     def move(self, direction):
@@ -81,6 +94,7 @@ class Heroine(Sprite):
         pass
 
     def focus(self, is_focused):
+        """Set/unset focused mode"""
         # TODO: Тестировать кейс, когда focus(True) вызывается многократно
         if is_focused:
             self.speed = self._base_speed * self.focus_coefficient
@@ -95,6 +109,26 @@ class Heroine(Sprite):
 
     def update(self):
         pass
+
+    def shoot(self, time):
+        """Generic heroine shooting method
+
+        Should be replaced in  subclasses"""
+        # TODO: POWERLEVEL!
+        # TODO: Shot spawn spots
+
+        # five shots per second
+        shooting_interval = 50
+        self.shot_timer += time
+
+        if self.shot_timer >= shooting_interval:
+            shot = projectile.HeroineBasicShot({
+                'groups': [self.shots_group_ref],
+                'pos': self.pos
+            })
+            self.shot_timer = 0
+
+
 
 
 

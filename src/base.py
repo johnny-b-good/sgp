@@ -6,6 +6,8 @@ import pygame
 from pygame.locals import *
 
 from heroine import Heroine
+from helpers import *
+
 
 pygame.init()
 DISPLAYSURF = pygame.display.set_mode((800, 600))
@@ -15,15 +17,32 @@ clock = pygame.time.Clock()
 
 field = pygame.sprite.Sprite()
 field.rect = Rect(0, 0, 800, 600)
-reimu = Heroine(field_ref=field, speed=4)
+shots_group = pygame.sprite.Group()
+params = {
+    'pos': (100, 500),
+    'sprite_size': (50, 50),
+    'hitbox_size': (20, 20),
+    'sprite_image': image_path('reimu.png'),
+    'hitbox_image': image_path('hitbox.png'),
+    'speed': 4,
+    'focus_coefficient': 0.5,
+    'lives': 3,
+    'bombs': 3,
+
+    'field_ref': field,
+    'shots_group_ref': shots_group,
+}
+
+reimu = Heroine(params)
 heroine_group = pygame.sprite.Group(reimu)
 hitbox_group = pygame.sprite.Group(reimu.hitbox)
 
+time = 0
 
 while True:
     DISPLAYSURF.fill(Color(0, 193, 255))
     heroine_group.draw(DISPLAYSURF)
-
+    reimu.shots_group_ref.draw(DISPLAYSURF)
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -59,6 +78,12 @@ while True:
     else:
         pass
 
+    # Shoot the bullet, lol
+    if keys[K_x]:
+        reimu.shoot(time)
+
+    reimu.shots_group_ref.update(time)
+
     pygame.display.flip()
 
-    clock.tick(FPS)
+    time = clock.tick(FPS)
