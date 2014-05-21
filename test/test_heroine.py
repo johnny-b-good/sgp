@@ -42,20 +42,20 @@ class HeroineTest(unittest.TestCase):
         diagonal_step = 7
 
         tests = [
-            (self.heroine.UP, (100, 500 - orthogonal_step), 'move up'),
-            (self.heroine.DOWN, (100, 500 + orthogonal_step), 'move down'),
-            (self.heroine.LEFT, (100 - orthogonal_step, 500), 'move left'),
-            (self.heroine.RIGHT, (100 + orthogonal_step, 500), 'move right'),
+            (self.heroine.UP, (100, 500 - orthogonal_step), 1000, 'move up'),
+            (self.heroine.DOWN, (100, 500 + orthogonal_step), 1000,  'move down'),
+            (self.heroine.LEFT, (100 - orthogonal_step, 500), 1000,  'move left'),
+            (self.heroine.RIGHT, (100 + orthogonal_step, 500), 1000,  'move right'),
 
-            (self.heroine.LEFT_UP, (100 - diagonal_step, 500 - diagonal_step), 'move left-up'),
-            (self.heroine.RIGHT_UP, (100 + diagonal_step, 500 - diagonal_step), 'move right-up'),
-            (self.heroine.LEFT_DOWN, (100 - diagonal_step, 500 + diagonal_step), 'move left-up'),
-            (self.heroine.RIGHT_DOWN, (100 + diagonal_step, 500 + diagonal_step), 'move right-down'),
+            (self.heroine.LEFT_UP, (100 - diagonal_step, 500 - diagonal_step), 1000,  'move left-up'),
+            (self.heroine.RIGHT_UP, (100 + diagonal_step, 500 - diagonal_step), 1000,  'move right-up'),
+            (self.heroine.LEFT_DOWN, (100 - diagonal_step, 500 + diagonal_step), 1000,  'move left-up'),
+            (self.heroine.RIGHT_DOWN, (100 + diagonal_step, 500 + diagonal_step), 1000,  'move right-down'),
         ]
 
         for test in tests:
-            direction, expected_pos, error_message = test
-            self.heroine.move(direction)
+            angle, expected_pos, time, error_message = test
+            self.heroine.move(angle, time)
             self.assertEqual(self.heroine.pos, expected_pos, error_message)
             self.assertEqual(self.heroine.rect.center, expected_pos, error_message)
             self.assertEqual(self.heroine.hitbox.rect.center, expected_pos, error_message)
@@ -65,21 +65,21 @@ class HeroineTest(unittest.TestCase):
         hitbox_half = 10
 
         tests = [
-            (self.heroine.UP, (500, 15), (500, 0 + hitbox_half), 'bump up'),
-            (self.heroine.DOWN, (500, 985), (500, 1000 - hitbox_half), 'bump down'),
-            (self.heroine.LEFT, (15, 500), (0 + hitbox_half, 500), 'bump left'),
-            (self.heroine.RIGHT, (985, 500), (1000 - hitbox_half, 500), 'bump right'),
+            (self.heroine.UP, (500, 15), (500, 0 + hitbox_half), 1000,  'bump up'),
+            (self.heroine.DOWN, (500, 985), (500, 1000 - hitbox_half), 1000,  'bump down'),
+            (self.heroine.LEFT, (15, 500), (0 + hitbox_half, 500), 1000,  'bump left'),
+            (self.heroine.RIGHT, (985, 500), (1000 - hitbox_half, 500), 1000,  'bump right'),
 
-            (self.heroine.LEFT_UP, (15, 15), (0 + hitbox_half, 0 + hitbox_half), 'bump left-up'),
-            (self.heroine.RIGHT_UP, (985, 15), (1000 - hitbox_half, 0 + hitbox_half), 'bump right-up'),
-            (self.heroine.LEFT_DOWN, (15, 985), (0 + hitbox_half, 1000 - hitbox_half), 'bump left-up'),
-            (self.heroine.RIGHT_DOWN, (985, 985), (1000 - hitbox_half, 1000 - hitbox_half), 'bump right-down'),
+            (self.heroine.LEFT_UP, (15, 15), (0 + hitbox_half, 0 + hitbox_half), 1000,  'bump left-up'),
+            (self.heroine.RIGHT_UP, (985, 15), (1000 - hitbox_half, 0 + hitbox_half), 1000,  'bump right-up'),
+            (self.heroine.LEFT_DOWN, (15, 985), (0 + hitbox_half, 1000 - hitbox_half), 1000,  'bump left-up'),
+            (self.heroine.RIGHT_DOWN, (985, 985), (1000 - hitbox_half, 1000 - hitbox_half), 1000,  'bump right-down'),
         ]
 
         for test in tests:
-            direction, current_pos, expected_pos, error_message = test
+            angle, current_pos, expected_pos, time,  error_message = test
             self.heroine.pos = current_pos
-            self.heroine.move(direction)
+            self.heroine.move(angle, time)
             self.assertEqual(self.heroine.pos, expected_pos, error_message)
             self.assertEqual(self.heroine.rect.center, expected_pos, error_message)
             self.assertEqual(self.heroine.hitbox.rect.center, expected_pos, error_message)
@@ -92,7 +92,6 @@ class HeroineTest(unittest.TestCase):
         self.heroine.focus(False)
         self.assertEqual(self.heroine.is_focused, False, 'failed to unset focused state')
         self.assertEqual(self.heroine.speed, 10, 'failed to change speed back to unfocused state')
-
 
     def test_focus_move(self):
         self.fail()

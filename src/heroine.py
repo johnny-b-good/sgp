@@ -10,17 +10,18 @@ import projectile
 
 
 class Heroine(Sprite):
-    # TODO - Clear up directions
+    # TODO - Clear up directions and movement <============== THIS!!!!
     # TODO - Move input events handling here
     # TODO - hitbox optimize, separate class
-    UP = (0, -1)
-    DOWN = (0, 1)
-    LEFT = (-1, 0)
-    RIGHT = (1, 0)
-    LEFT_UP = (-1, -1)
-    RIGHT_UP = (1, -1)
-    LEFT_DOWN = (-1, 1)
-    RIGHT_DOWN = (1, 1)
+    # TODO - hitbox - null image when focused
+    RIGHT = 0
+    RIGHT_UP = 45
+    UP = 90
+    LEFT_UP = 135
+    LEFT = 180
+    LEFT_DOWN = 225
+    DOWN = 270
+    RIGHT_DOWN = 315
 
     MAX_LIVES = 9
     MAX_BOMBS = 9
@@ -65,13 +66,15 @@ class Heroine(Sprite):
         hitbox.image = pygame.image.load(image).convert()
         return hitbox
 
-    def move(self, direction):
+    def move(self, angle, time):
         """Move heroine on screen"""
-        dx, dy = direction
-        coefficient = round(1 / math.sqrt(pow(dx, 2) + pow(dy, 2)), 1)
-        step_x, step_y = round(dx * coefficient * self.speed), round(dy * coefficient * self.speed)
+        time = float(time) / 1000
+        distance = time * self.speed
+        angle_radians = math.radians(angle)
+        dx = round(distance * math.cos(angle_radians))
+        dy = round(distance * math.sin(angle_radians))
         current_x, current_y = self.pos
-        new_x, new_y = current_x + step_x, current_y + step_y
+        new_x, new_y = current_x + dx, current_y - dy
         self.pos = self._prevent_boundary_collision(new_x, new_y)
 
     def _prevent_boundary_collision(self, x, y):
@@ -108,6 +111,7 @@ class Heroine(Sprite):
             self.lives -= 1
 
     def update(self):
+        """Sprite animation goes here"""
         pass
 
     def shoot(self, time):
@@ -122,14 +126,14 @@ class Heroine(Sprite):
         self.shot_timer += time
 
         if self.shot_timer >= shooting_interval:
-            shot = projectile.HeroineBasicShot({
+            projectile.HeroineBasicShot({
                 'groups': [self.shots_group_ref],
                 'pos': self.pos
             })
             self.shot_timer = 0
 
-
-
+    def bomb(self, time):
+        pass
 
 
     @property

@@ -24,7 +24,7 @@ params = {
     'hitbox_size': (20, 20),
     'sprite_image': image_path('reimu.png'),
     'hitbox_image': image_path('hitbox.png'),
-    'speed': 4,
+    'speed': 400,
     'focus_coefficient': 0.5,
     'lives': 3,
     'bombs': 3,
@@ -60,21 +60,21 @@ while True:
     # Directions
     keys = pygame.key.get_pressed()
     if keys[K_LEFT] and keys[K_UP]:
-        reimu.move(reimu.LEFT_UP)
+        reimu.move(reimu.LEFT_UP, time)
     elif keys[K_LEFT] and keys[K_DOWN]:
-        reimu.move(reimu.LEFT_DOWN)
+        reimu.move(reimu.LEFT_DOWN, time)
     elif keys[K_RIGHT] and keys[K_UP]:
-        reimu.move(reimu.RIGHT_UP)
+        reimu.move(reimu.RIGHT_UP, time)
     elif keys[K_RIGHT] and keys[K_DOWN]:
-        reimu.move(reimu.RIGHT_DOWN)
+        reimu.move(reimu.RIGHT_DOWN, time)
     elif keys[K_UP]:
-        reimu.move(reimu.UP)
+        reimu.move(reimu.UP, time)
     elif keys[K_DOWN]:
-        reimu.move(reimu.DOWN)
+        reimu.move(reimu.DOWN, time)
     elif keys[K_LEFT]:
-        reimu.move(reimu.LEFT)
+        reimu.move(reimu.LEFT, time)
     elif keys[K_RIGHT]:
-        reimu.move(reimu.RIGHT)
+        reimu.move(reimu.RIGHT, time)
     else:
         pass
 
