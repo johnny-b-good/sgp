@@ -15,8 +15,8 @@ pygame.key.set_repeat(0, 10)
 FPS = 60
 clock = pygame.time.Clock()
 
-field = pygame.sprite.Sprite()
-field.rect = Rect(0, 0, 800, 600)
+playfield = pygame.sprite.Sprite()
+playfield.rect = Rect(0, 0, 800, 600)
 shots_group = pygame.sprite.Group()
 params = {
     'pos': (100, 500),
@@ -29,8 +29,8 @@ params = {
     'lives': 3,
     'bombs': 3,
 
-    'field_ref': field,
-    'shots_group_ref': shots_group,
+    'playfield': playfield,
+    'heroine_shots_groups': [shots_group],
 }
 
 reimu = Heroine(params)
@@ -42,7 +42,7 @@ time = 0
 while True:
     DISPLAYSURF.fill(Color(0, 193, 255))
     heroine_group.draw(DISPLAYSURF)
-    reimu.shots_group_ref.draw(DISPLAYSURF)
+    shots_group.draw(DISPLAYSURF)
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -82,7 +82,7 @@ while True:
     if keys[K_x]:
         reimu.shoot(time)
 
-    reimu.shots_group_ref.update(time)
+    shots_group.update(time)
 
     pygame.display.flip()
 

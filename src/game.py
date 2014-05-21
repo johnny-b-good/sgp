@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import pygame
 from pygame.locals import *
-from pygame.sprite import Group
+from pygame.sprite import Sprite, Group, OrderedUpdates
+from pygame.surface import Surface
+
+from heroine import Heroine
+from helpers import *
 
 
 class Game(object):
@@ -16,41 +21,69 @@ class Game(object):
         self.fps = 60
 
         # Create sprite groups
-        self.everything_group = Group()
+        self.everything_group = OrderedUpdates()
         self.heroine_shots_group = Group()
         self.enemies_group = Group()
         self.enemy_shots_group = Group()
-        self.explosions_group = Group(5)
+        self.explosions_group = Group()
         self.bonuses_group = Group()
         self.indicators_group = Group()
 
-        # Create heroine
-        self.heroine = None
-
         # Create playfield
-        self.field = None
+        # TODO: playfield generation
+        self.playfield = Sprite()
+        self.playfield.rect = Rect(0, 0, 800, 600)
 
         # Create background
-        self.background = None
+        # TODO: game background
+        self.background = Sprite()
+        self.background.rect = Rect(0, 0, 800, 600)
+        self.background.image = Surface((800, 600)).fill(Color(0, 193, 255))
+
+        # Create heroine
+        self.heroine = Heroine({
+            'pos': (400, 500),
+
+            'sprite_size': (50, 50),
+            'sprite_image': image_path('reimu.png'),
+            'sprite_groups': [self.everything_group],
+
+            'hitbox_size': (20, 20),
+            'hitbox_image': image_path('hitbox.png'),
+            'hitbox_groups': [self.everything_group],
+
+            'lives': 3,
+            'bombs': 3,
+
+            'speed': 400,
+            'focus_coefficient': 0.5,
+
+            'heroine_shots_groups': [self.heroine_shots_group, self.everything_group],
+
+            'playfield': self.playfield
+        })
 
         # Launch main loop
         time = 0
         while True:
-            self.main_loop(time)
+            self.handle_events()
+            self.handle_user_input(time)
+            self.handle_collisions()
+            self.everything_group.update(time)
+            self.display.fill((0, 193, 255))
+            self.everything_group.draw(self.display)
+            pygame.display.flip()
             time = self.clock.tick(self.fps)
 
-    def main_loop(self, time):
-        self.handle_user_input(time)
-        self.handle_collisions()
-        self.everything_group.update(time)
-        self.everything_group.draw()
-        pygame.display.flip()
 
-    def load_scenarios(self):
-        pass
+    # def load_scenarios(self):
+    #     pass
 
-    def handle_collisions(self):
-        pass
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
 
     def handle_user_input(self, time):
         # Focus
@@ -85,4 +118,9 @@ class Game(object):
         if keys[K_x]:
             self.heroine.shoot(time)
 
-i
+    def handle_collisions(self):
+        pass
+
+
+if __name__ == '__main__':
+    Game()

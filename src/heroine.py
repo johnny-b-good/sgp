@@ -5,13 +5,12 @@ import math
 import pygame
 from pygame.sprite import Sprite
 from pygame.rect import Rect
+from pygame.surface import Surface
 
 import projectile
 
 
 class Heroine(Sprite):
-    # TODO - Clear up directions and movement <============== THIS!!!!
-    # TODO - Move input events handling here
     # TODO - hitbox optimize, separate class
     # TODO - hitbox - null image when focused
     RIGHT = 0
@@ -27,11 +26,11 @@ class Heroine(Sprite):
     MAX_BOMBS = 9
 
     def __init__(self, params):
-        super(Heroine, self).__init__()
+        super(Heroine, self).__init__(*params.get('sprite_groups', []))
         # Sprite's rect
         self.rect = Rect((0, 0), params['sprite_size'])
         # Create hitbox sprite
-        self.hitbox = self._create_hitbox(params['hitbox_size'], params['hitbox_image'])
+        self.hitbox = Hitbox(params)
         # Set heroine's coordinates
         self.pos = params['pos']
         # Load sprite's image
@@ -49,22 +48,13 @@ class Heroine(Sprite):
         # Number of bombs
         self.bombs = params['bombs']
         # Reference to playfield object
-        self.field_ref = params['field_ref']
+        self.playfield = params['playfield']
         # Reference to heroine's shots Group
-        self.shots_group_ref = params['shots_group_ref']
+        self.heroine_shots_groups = params['heroine_shots_groups']
         # Initialize shot classes
         projectile.HeroineBasicShot.setup_class_attrs()
-        #
+        # TODO: DOCUMENT ME
         self.shot_timer = 0
-
-    def _create_hitbox(self, hitbox_size, image):
-        """Create heroine's hitbox sprite"""
-        hitbox = Sprite()
-        hitbox.rect = Rect((0, 0), hitbox_size)
-        hitbox.rect.center = self.pos
-
-        hitbox.image = pygame.image.load(image).convert()
-        return hitbox
 
     def move(self, angle, time):
         """Move heroine on screen"""
@@ -79,17 +69,18 @@ class Heroine(Sprite):
 
     def _prevent_boundary_collision(self, x, y):
         """Check field boundary collision"""
+        # TODO - remove repetitions
         if x < self.hitbox.rect.width / 2:
             x = self.hitbox.rect.width / 2
 
         if y < self.hitbox.rect.height / 2:
             y = self.hitbox.rect.height / 2
 
-        if x > self.field_ref.rect.width - self.hitbox.rect.width / 2:
-            x = self.field_ref.rect.width - self.hitbox.rect.width / 2
+        if x > self.playfield.rect.width - self.hitbox.rect.width / 2:
+            x = self.playfield.rect.width - self.hitbox.rect.width / 2
 
-        if y > self.field_ref.rect.height - self.hitbox.rect.height / 2:
-            y = self.field_ref.rect.height - self.hitbox.rect.height / 2
+        if y > self.playfield.rect.height - self.hitbox.rect.height / 2:
+            y = self.playfield.rect.height - self.hitbox.rect.height / 2
 
         return x, y
 
@@ -102,15 +93,17 @@ class Heroine(Sprite):
         if is_focused:
             self.speed = self._base_speed * self.focus_coefficient
             self.is_focused = True
+            self.hitbox.is_focused = True
         else:
             self.speed = self._base_speed
             self.is_focused = False
+            self.hitbox.is_focused = False
 
     def hit(self):
         if self.lives > 0:
             self.lives -= 1
 
-    def update(self):
+    def update(self, *args):
         """Sprite animation goes here"""
         pass
 
@@ -127,14 +120,13 @@ class Heroine(Sprite):
 
         if self.shot_timer >= shooting_interval:
             projectile.HeroineBasicShot({
-                'groups': [self.shots_group_ref],
+                'groups': self.heroine_shots_groups,
                 'pos': self.pos
             })
             self.shot_timer = 0
 
     def bomb(self, time):
         pass
-
 
     @property
     def pos(self):
@@ -144,4 +136,45 @@ class Heroine(Sprite):
     @pos.setter
     def pos(self, new_pos):
         self.rect.center = new_pos
-        self.hitbox.rect.center = new_pos
+        self.hitbox.pos = new_pos
+
+
+class Hitbox(Sprite):
+    """ Heroine's hitbox sprite """
+    def __init__(self, params):
+        super(Hitbox, self).__init__(*params.get('hitbox_groups', []))
+        # Create hitbox's rectangle and set it's position
+        self.rect = Rect((0, 0), params['hitbox_size'])
+        self.rect.center = params['pos']
+        # Load hitbox's image
+        self._image = pygame.image.load(params['hitbox_image']).convert()
+        # Empty image for unfocused mode
+        self._null_image = Surface((0, 0))
+        # Is heroine focused?
+        self.is_focused = False
+
+    def update(self, *args):
+        """Sprite animation goes here"""
+        pass
+
+    @property
+    def image(self):
+        if self.is_focused:
+            return self._image
+        else:
+            return self._null_image
+
+    @property
+    def pos(self):
+        return self.rect.center
+
+    @pos.setter
+    def pos(self, new_pos):
+        self.rect.center = new_pos
+
+
+class Reimu(Heroine):
+    params = {}
+
+    def __init__(self):
+        super(Reimu, self).__init__(params)
