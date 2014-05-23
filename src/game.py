@@ -28,17 +28,21 @@ class Game(object):
         self.explosions_group = Group()
         self.bonuses_group = Group()
         self.indicators_group = Group()
-
-        # Create playfield
-        # TODO: playfield generation
-        self.playfield = Sprite()
-        self.playfield.rect = Rect(0, 0, 800, 600)
+        self.boundaries_group = Group()
 
         # Create background
-        # TODO: game background
-        self.background = Sprite()
-        self.background.rect = Rect(0, 0, 800, 600)
-        self.background.image = Surface((800, 600)).fill(Color(0, 193, 255))
+        self.background = Background({
+            'image': image_path('background.png'),
+            'size': (800, 500),
+            'groups': [self.everything_group],
+        })
+
+        # Create playfield
+        self.playfield = Field({
+            'size': (600, 600),
+            'groups': [self.everything_group],
+            'boundaries_group': self.boundaries_group
+        })
 
         # Create heroine
         self.heroine = Heroine({
@@ -75,9 +79,8 @@ class Game(object):
             pygame.display.flip()
             time = self.clock.tick(self.fps)
 
-
-    # def load_scenarios(self):
-    #     pass
+    def load_scenarios(self):
+        pass
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -117,9 +120,42 @@ class Game(object):
         # Shoot the bullet, lol
         if keys[K_x]:
             self.heroine.shoot(time)
+            print self.heroine_shots_group, self.everything_group
 
     def handle_collisions(self):
+        # pygame.sprite.groupcollide(self.heroine_shots_group, self.boundaries_group, True, False)
         pass
+
+
+class Field(Sprite):
+    def __init__(self, params):
+        super(Field, self).__init__(*params.get('groups', []))
+        self.rect = Rect((0, 0), params['size'])
+        # self.image = Surface(params['size']).fill(Color(0, 193, 255))
+        self.image = Surface(params['size'])
+        self.image.fill(Color(0, 193, 255))
+        # width = self.rect.width + 200
+        boundary_thickness = 100
+        boundary_margin = 100
+        boundary_width = self.rect.width + 2 * boundary_margin
+        boundary_height = self.rect.height + 2 * boundary_margin
+        self.boundary_sizes = {
+            'top': Rect(-boundary_margin, -boundary_margin-boundary_thickness, boundary_width, boundary_thickness),
+            'right': Rect(boundary_width, -boundary_margin, boundary_thickness, boundary_height),
+            'bottom': Rect(-boundary_margin, boundary_height, boundary_width, boundary_thickness),
+            'left': Rect(-boundary_margin - boundary_thickness, -boundary_margin, boundary_thickness, boundary_height),
+        }
+        for boundary_rect in self.boundary_sizes.values():
+            boundary = Sprite(params['boundaries_group'])
+            boundary.rect = boundary_rect
+
+
+class Background(Sprite):
+    def __init__(self, params):
+        super(Background, self).__init__(*params.get('groups', []))
+        self.rect = Rect((0, 0), params['size'])
+        self.image = pygame.image.load(params['image']).convert()
+
 
 
 if __name__ == '__main__':

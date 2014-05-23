@@ -50,6 +50,6 @@ class HeroineBasicShot(Projectile):
 
     @classmethod
     def setup_class_attrs(cls):
-        cls.func = movement.linear(angle=90, speed=500)
+        cls.func = movement.linear(angle=90, speed=700)
         cls.image = pygame.image.load(image_path('shot1.png')).convert()
         cls.size = (10, 20)
