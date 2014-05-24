@@ -28,7 +28,6 @@ class Game(object):
         self.explosions_group = Group()
         self.bonuses_group = Group()
         self.indicators_group = Group()
-        self.boundaries_group = Group()
 
         # Create background
         self.background = Background({
@@ -41,7 +40,7 @@ class Game(object):
         self.playfield = Field({
             'size': (600, 600),
             'groups': [self.everything_group],
-            'boundaries_group': self.boundaries_group
+            'boundary_thickness': 100
         })
 
         # Create heroine
@@ -74,7 +73,6 @@ class Game(object):
             self.handle_user_input(time)
             self.handle_collisions()
             self.everything_group.update(time)
-            self.display.fill((0, 193, 255))
             self.everything_group.draw(self.display)
             pygame.display.flip()
             time = self.clock.tick(self.fps)
@@ -120,34 +118,25 @@ class Game(object):
         # Shoot the bullet, lol
         if keys[K_x]:
             self.heroine.shoot(time)
-            print self.heroine_shots_group, self.everything_group
+            # print self.heroine_shots_group, self.everything_group
 
     def handle_collisions(self):
-        # pygame.sprite.groupcollide(self.heroine_shots_group, self.boundaries_group, True, False)
-        pass
+        # Remove heroine's and enemy's shots that left the field
+        pygame.sprite.spritecollide(self.playfield.boundary, self.heroine_shots_group, True, detect_boundary_leaving)
+        pygame.sprite.spritecollide(self.playfield.boundary, self.enemy_shots_group, True, detect_boundary_leaving)
 
 
 class Field(Sprite):
     def __init__(self, params):
         super(Field, self).__init__(*params.get('groups', []))
         self.rect = Rect((0, 0), params['size'])
-        # self.image = Surface(params['size']).fill(Color(0, 193, 255))
         self.image = Surface(params['size'])
         self.image.fill(Color(0, 193, 255))
-        # width = self.rect.width + 200
-        boundary_thickness = 100
-        boundary_margin = 100
-        boundary_width = self.rect.width + 2 * boundary_margin
-        boundary_height = self.rect.height + 2 * boundary_margin
-        self.boundary_sizes = {
-            'top': Rect(-boundary_margin, -boundary_margin-boundary_thickness, boundary_width, boundary_thickness),
-            'right': Rect(boundary_width, -boundary_margin, boundary_thickness, boundary_height),
-            'bottom': Rect(-boundary_margin, boundary_height, boundary_width, boundary_thickness),
-            'left': Rect(-boundary_margin - boundary_thickness, -boundary_margin, boundary_thickness, boundary_height),
-        }
-        for boundary_rect in self.boundary_sizes.values():
-            boundary = Sprite(params['boundaries_group'])
-            boundary.rect = boundary_rect
+        self.boundary = Sprite()
+        self.boundary_thickness = params['boundary_thickness']
+        self.boundary.rect = Rect(
+            -self.boundary_thickness, -self.boundary_thickness,
+            self.rect.width + 2 * self.boundary_thickness, self.rect.height + 2 * self.boundary_thickness)
 
 
 class Background(Sprite):
