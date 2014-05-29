@@ -2,18 +2,24 @@ import unittest
 import pygame
 from pygame.sprite import Sprite
 from pygame.rect import Rect
-from src.helpers import *
 
 from src.projectile import Projectile
 from src.movement import linear
+import src.resource_manager as resource_manager
+
+# Init pygame and load resources
+pygame.init()
+pygame.display.set_mode((800, 600))
+resource_manager.init()
 
 
 class ProjectileTest(unittest.TestCase):
     def setUp(self):
         Projectile.setup_class_attrs({
-            'image': image_path('shot1.png'),
+            'image_id': 'shot1.png',
             'func': None,
             'size': (10, 20),
+            'damage': 100
         })
 
         self.projectile = Projectile({

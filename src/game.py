@@ -9,13 +9,14 @@ from pygame.surface import Surface
 
 from heroine import Heroine
 from helpers import *
-
+import resource_manager
 
 class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
         self.display = pygame.display.set_mode((800, 600))
+        resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
         self.fps = 60
@@ -31,7 +32,7 @@ class Game(object):
 
         # Create background
         self.background = Background({
-            'image': image_path('background.png'),
+            'image': 'background.png',
             'size': (800, 500),
             'groups': [self.everything_group],
         })
@@ -48,11 +49,11 @@ class Game(object):
             'pos': (400, 500),
 
             'sprite_size': (50, 50),
-            'sprite_image': image_path('reimu.png'),
+            'sprite_image': 'reimu.png',
             'sprite_groups': [self.everything_group],
 
             'hitbox_size': (20, 20),
-            'hitbox_image': image_path('hitbox.png'),
+            'hitbox_image': 'hitbox.png',
             'hitbox_groups': [self.everything_group],
 
             'lives': 3,
@@ -125,6 +126,13 @@ class Game(object):
         pygame.sprite.spritecollide(self.playfield.boundary, self.heroine_shots_group, True, detect_boundary_leaving)
         pygame.sprite.spritecollide(self.playfield.boundary, self.enemy_shots_group, True, detect_boundary_leaving)
 
+        # Heroine is hit by enemy projectile or enemy itself
+        pygame.sprite.spritecollide(self.heroine, self.enemy_shots_group, True)
+        pygame.sprite.spritecollide(self.heroine, self.enemies_group, True)
+
+        # Destroy enemies with heroine's shots
+        pygame.sprite.groupcollide(self.heroine_shots_group, self.enemies_group, True, True)
+
 
 class Field(Sprite):
     def __init__(self, params):
@@ -143,7 +151,7 @@ class Background(Sprite):
     def __init__(self, params):
         super(Background, self).__init__(*params.get('groups', []))
         self.rect = Rect((0, 0), params['size'])
-        self.image = pygame.image.load(params['image']).convert()
+        self.image = resource_manager.images[params['image']]
 
 
 

@@ -1,12 +1,3 @@
-import os
-
-
-def image_path(*args):
-    """Get image's absolute path"""
-    parts = [os.getcwd(), 'gfx'] + list(args)
-    return os.path.join(*parts)
-
-
 def detect_boundary_leaving(boundary_sprite, projectile_sprite):
     """ Detect if a sprite has left a boundary of another sprite"""
     if projectile_sprite.rect.top < boundary_sprite.rect.top:

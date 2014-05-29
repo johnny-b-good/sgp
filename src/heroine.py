@@ -7,6 +7,7 @@ from pygame.sprite import Sprite
 from pygame.rect import Rect
 from pygame.surface import Surface
 
+import resource_manager
 import projectile
 
 
@@ -34,7 +35,7 @@ class Heroine(Sprite):
         # Set heroine's coordinates
         self.pos = params['pos']
         # Load sprite's image
-        self.image = pygame.image.load(params['sprite_image']).convert()
+        self.image = resource_manager.images[params['sprite_image']]
         # Heroine's current speed
         self.speed = params['speed']
         # Heroine's base speed
@@ -51,8 +52,6 @@ class Heroine(Sprite):
         self.playfield = params['playfield']
         # Reference to heroine's shots Group
         self.heroine_shots_groups = params['heroine_shots_groups']
-        # Initialize shot classes
-        projectile.HeroineBasicShot.setup_class_attrs()
         # TODO: DOCUMENT ME
         self.shot_timer = 0
 
@@ -70,6 +69,7 @@ class Heroine(Sprite):
     def _prevent_boundary_collision(self, x, y):
         """Check field boundary collision"""
         # TODO - remove repetitions
+
         if x < self.hitbox.rect.width / 2:
             x = self.hitbox.rect.width / 2
 
@@ -147,7 +147,7 @@ class Hitbox(Sprite):
         self.rect = Rect((0, 0), params['hitbox_size'])
         self.rect.center = params['pos']
         # Load hitbox's image
-        self._image = pygame.image.load(params['hitbox_image']).convert()
+        self._image = resource_manager.images[params['hitbox_image']]
         # Empty image for unfocused mode
         self._null_image = Surface((0, 0))
         # Is heroine focused?

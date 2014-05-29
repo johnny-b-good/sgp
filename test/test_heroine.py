@@ -3,7 +3,12 @@ import pygame
 from pygame.sprite import Sprite, Group
 from pygame.rect import Rect
 from src.heroine import Heroine
-from src.helpers import *
+import src.resource_manager as resource_manager
+
+# Init pygame and load resources
+pygame.init()
+pygame.display.set_mode((800, 600))
+resource_manager.init()
 
 
 class HeroineTest(unittest.TestCase):
@@ -16,8 +21,8 @@ class HeroineTest(unittest.TestCase):
             'pos': (100, 500),
             'sprite_size': (50, 50),
             'hitbox_size': (20, 20),
-            'sprite_image': image_path('reimu.png'),
-            'hitbox_image': image_path('hitbox.png'),
+            'sprite_image': 'reimu.png',
+            'hitbox_image': 'hitbox.png',
             'speed': 10,
             'focus_coefficient': 0.5,
             'lives': 3,
