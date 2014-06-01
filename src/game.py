@@ -40,7 +40,7 @@ class Game(object):
         self.playfield = Field({
             'size': (600, 600),
             'groups': [self.everything_group],
-            'boundary_thickness': 100
+            'boundary_thickness': 300
         })
 
         # Create heroine

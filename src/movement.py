@@ -1,7 +1,7 @@
 import math
 
 
-def linear(angle=0, speed=0):
+def linear(angle=0, speed=100):
     """Build a function describing linear movement
 
     angle - movement angle in degrees5
@@ -20,3 +20,15 @@ def linear(angle=0, speed=0):
         return x + dx, y - dy
 
     return move
+
+
+def quadratic():
+    pass
+
+
+def spiral():
+    pass
+
+
+def square_root():
+    pass
