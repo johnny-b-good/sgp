@@ -11,6 +11,7 @@ from heroine import Heroine
 from helpers import *
 import resource_manager
 
+
 class Game(object):
     def __init__(self):
         # Initialize basic stuff

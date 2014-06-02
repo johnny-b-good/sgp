@@ -32,6 +32,7 @@ def _create_file_id(name):
 
 
 def _get_files_dict(root):
+    """ Create a dict of file_id:file_path pairs from a list of file_paths"""
     names = []
     for current_dir, dirs, files in os.walk(root):
         names += map(lambda f: os.path.join(current_dir, f), files)
@@ -40,6 +41,7 @@ def _get_files_dict(root):
 
 
 def _load_images():
+    """ Recursivly load all images from directory """
     files_dict = _get_files_dict(IMAGES_DIR)
 
     for file_id, file_path in files_dict.iteritems():
@@ -61,6 +63,7 @@ def _load_images():
 
 
 def _load_sounds():
+    """ Recursivly load all sounds from directory """
     return {}
 
 
