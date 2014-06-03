@@ -15,6 +15,12 @@ class Projectile(DirtySprite):
     You should not use it normally, make a subclass, will ya?
     """
 
+    # TODO Объединить этот класс с атаками
+    # Картинки уже кешированы в res-man
+    # Размеры спрайтов тянуть из картинок
+    # Ссылку на картинку передавать в параметрах
+    # Или же тянуть их внутри инита, если атаке нужны определенные картинки
+
     @classmethod
     def setup_class_attrs(cls, params):
         """Setup class attributes"""

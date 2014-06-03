@@ -22,6 +22,11 @@ def linear(angle=0, speed=100):
     return move
 
 
+def aimed(self, heroine, speed=100):
+    angle = math.atan((self.pos[0] - heroine.pos[0]) / (self.pos[1] - heroine.pos[1]))
+    return linear(angle=angle, speed=speed)
+
+
 def quadratic():
     pass
 

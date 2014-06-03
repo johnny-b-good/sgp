@@ -25,7 +25,7 @@ def init():
 
 
 def _create_file_id(name):
-    """ Create file id as nix-style name without root resource folder """
+    """ Create file id as nix-style path without root resource folder """
     path_list = name.split(os.sep)
     path_list.pop(0)
     return '/'.join(path_list)
