@@ -3,7 +3,7 @@
 
 import math
 import pygame
-from pygame.sprite import Sprite
+from pygame.sprite import DirtySprite
 from pygame.rect import Rect
 from pygame.surface import Surface
 
@@ -11,9 +11,7 @@ import resource_manager
 import projectile
 
 
-class Heroine(Sprite):
-    # TODO - hitbox optimize, separate class
-    # TODO - hitbox - null image when focused
+class Heroine(DirtySprite):
     RIGHT = 0
     RIGHT_UP = 45
     UP = 90
@@ -139,7 +137,7 @@ class Heroine(Sprite):
         self.hitbox.pos = new_pos
 
 
-class Hitbox(Sprite):
+class Hitbox(DirtySprite):
     """ Heroine's hitbox sprite """
     def __init__(self, params):
         super(Hitbox, self).__init__(*params.get('hitbox_groups', []))

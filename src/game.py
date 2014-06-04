@@ -16,7 +16,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.display = pygame.display.set_mode((800, 600))
+        self.display = pygame.display.set_mode((800, 600), FULLSCREEN)
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -41,6 +41,7 @@ class Game(object):
         # Create playfield
         self.playfield = Field({
             'size': (600, 600),
+            'image': 'field.png',
             'groups': [self.everything_group],
             'boundary_thickness': 300
         })
@@ -49,18 +50,18 @@ class Game(object):
         self.heroine = Heroine({
             'pos': (400, 500),
 
-            'sprite_size': (50, 50),
-            'sprite_image': 'reimu.png',
+            'sprite_size': (20, 50),
+            'sprite_image': 'daria.png',
             'sprite_groups': [self.everything_group],
 
-            'hitbox_size': (20, 20),
-            'hitbox_image': 'hitbox.png',
+            'hitbox_size': (8, 8),
+            'hitbox_image': 'hitbox3.png',
             'hitbox_groups': [self.everything_group],
 
             'lives': 3,
             'bombs': 3,
 
-            'speed': 400,
+            'speed': 300,
             'focus_coefficient': 0.5,
 
             'heroine_shots_groups': [self.heroine_shots_group, self.everything_group],
@@ -121,6 +122,10 @@ class Game(object):
         if keys[K_x]:
             self.heroine.shoot(time)
             # print self.heroine_shots_group, self.everything_group
+        
+        if keys[K_ESCAPE]:
+	    pygame.quit()
+	    sys.exit()
 
     def handle_collisions(self):
         # Remove heroine's and enemy's shots that left the field
@@ -139,8 +144,7 @@ class Field(Sprite):
     def __init__(self, params):
         super(Field, self).__init__(*params.get('groups', []))
         self.rect = Rect((0, 0), params['size'])
-        self.image = Surface(params['size'])
-        self.image.fill(Color(0, 193, 255))
+        self.image = resource_manager.images[params['image']]
         self.boundary = Sprite()
         self.boundary_thickness = params['boundary_thickness']
         self.boundary.rect = Rect(

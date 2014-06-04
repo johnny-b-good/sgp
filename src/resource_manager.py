@@ -50,7 +50,7 @@ def _load_images():
         except pygame.error:
             raise IOError('Cannot load image: %s' % file_path)
 
-        image = image.convert()
+        image = image.convert_alpha()
 
         # if colorkey is not None:
         #     if colorkey is -1:

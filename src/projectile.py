@@ -54,5 +54,5 @@ class HeroineBasicShot(Projectile):
     """
 
     func = movement.linear(angle=90, speed=700)
-    image_id = 'shot1.png'
-    size = (10, 20)
+    image_id = 'shot2.png'
+    size = (8, 10)
