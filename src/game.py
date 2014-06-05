@@ -16,7 +16,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.display = pygame.display.set_mode((800, 600), FULLSCREEN)
+        self.display = pygame.display.set_mode((800, 600))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -34,7 +34,7 @@ class Game(object):
         # Create background
         self.background = Background({
             'image': 'background.png',
-            'size': (800, 500),
+            'size': (800, 600),
             'groups': [self.everything_group],
         })
 

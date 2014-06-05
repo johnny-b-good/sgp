@@ -123,7 +123,7 @@ class Heroine(DirtySprite):
             attack.single(projectile_type=HeroineBasicShot,
                           starting_pos=self.pos,
                           movement_type=movement.linear,
-                          movement_params={'angle': 100, 'speed': 700},
+                          movement_params={'angle': 90, 'speed': 700},
                           groups=self.heroine_shots_groups)
             self.shot_timer = 0
 

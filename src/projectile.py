@@ -12,8 +12,6 @@ class Projectile(DirtySprite):
 
     You should not use it normally, make a subclass, will ya?
     """
-    # Ссылку на картинку передавать в параметрах
-    # Или же тянуть их внутри инита, если атаке нужны определенные картинки
 
     @classmethod
     def setup_class_attrs(cls, image_id, damage):
@@ -42,6 +40,6 @@ class Projectile(DirtySprite):
 
 class HeroineBasicShot(Projectile):
     """Basic heroine's shot - A glowing blue rectangle"""
-    func = movement.linear(angle=90, speed=700)
+    # func = movement.linear(angle=45, speed=700)
     image_id = 'shot2.png'
     damage = 10
