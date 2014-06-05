@@ -3,10 +3,8 @@
 
 import pygame
 from pygame.sprite import DirtySprite
-from pygame.rect import Rect
-
-import movement
 import resource_manager
+import movement
 
 
 class Projectile(DirtySprite):
@@ -14,26 +12,21 @@ class Projectile(DirtySprite):
 
     You should not use it normally, make a subclass, will ya?
     """
-
-    # TODO Объединить этот класс с атаками
-    # Картинки уже кешированы в res-man
-    # Размеры спрайтов тянуть из картинок
     # Ссылку на картинку передавать в параметрах
     # Или же тянуть их внутри инита, если атаке нужны определенные картинки
 
     @classmethod
-    def setup_class_attrs(cls, params):
+    def setup_class_attrs(cls, image_id, damage):
         """Setup class attributes"""
-        cls.func = params['func']
-        cls.image_id = params['image_id']
-        cls.size = params['size']
-        cls.damage = params['damage']
+        cls.image_id = image_id
+        cls.damage = damage
 
-    def __init__(self, params):
-        super(Projectile, self).__init__(*params.get('groups', []))
-        self.rect = Rect((0, 0), self.size)
+    def __init__(self, pos=(0, 0), groups=[], func=None):
+        super(Projectile, self).__init__(*groups)
         self.image = resource_manager.images[self.image_id]
-        self.pos = params['pos']
+        self.rect = self.image.get_rect(center=pos)
+        self.func = func
+        # TODO func cached in da class?
 
     @property
     def pos(self):
@@ -48,11 +41,7 @@ class Projectile(DirtySprite):
 
 
 class HeroineBasicShot(Projectile):
-    """Basic heroine's shot
-
-    A glowing blue rectangle moving vertically in bottom-top direction
-    """
-
+    """Basic heroine's shot - A glowing blue rectangle"""
     func = movement.linear(angle=90, speed=700)
     image_id = 'shot2.png'
-    size = (8, 10)
+    damage = 10

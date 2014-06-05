@@ -8,7 +8,9 @@ from pygame.rect import Rect
 from pygame.surface import Surface
 
 import resource_manager
-import projectile
+from projectile import *
+import attack
+import movement
 
 
 class Heroine(DirtySprite):
@@ -111,16 +113,18 @@ class Heroine(DirtySprite):
         Should be replaced in  subclasses"""
         # TODO: POWERLEVEL!
         # TODO: Shot spawn spots
+        # TODO Move shooting interval to self
 
         # five shots per second
         shooting_interval = 50
         self.shot_timer += time
 
         if self.shot_timer >= shooting_interval:
-            projectile.HeroineBasicShot({
-                'groups': self.heroine_shots_groups,
-                'pos': self.pos
-            })
+            attack.single(projectile_type=HeroineBasicShot,
+                          starting_pos=self.pos,
+                          movement_type=movement.linear,
+                          movement_params={'angle': 100, 'speed': 700},
+                          groups=self.heroine_shots_groups)
             self.shot_timer = 0
 
     def bomb(self, time):

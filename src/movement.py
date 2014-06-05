@@ -11,7 +11,7 @@ def linear(angle=0, speed=100):
     angle_sin = math.sin(angle_radians)
     angle_cos = math.cos(angle_radians)
 
-    def move(obj, pos=(0, 0), time=0):
+    def move(pos=(0, 0), time=0):
         time = float(time) / 1000
         distance = speed * time
         dx = round(distance * angle_cos)
@@ -22,18 +22,21 @@ def linear(angle=0, speed=100):
     return move
 
 
-def aimed(self, heroine, speed=100):
-    angle = math.atan((self.pos[0] - heroine.pos[0]) / (self.pos[1] - heroine.pos[1]))
+def aimed(self, aim_pos=0, speed=100):
+    angle = int(math.atan(
+        (self.pos[0] - aim_pos.pos[0]) /
+        (self.pos[1] - aim_pos.pos[1])
+    ))
     return linear(angle=angle, speed=speed)
 
 
-def quadratic():
+def ark():
     pass
 
 
-def spiral():
+def wave():
     pass
 
 
-def square_root():
+def circular():
     pass
