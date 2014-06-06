@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import importlib
 import pygame
 from pygame.locals import *
-from pygame.sprite import Sprite, Group, OrderedUpdates
-from pygame.surface import Surface
+from pygame.sprite import DirtySprite, Group, OrderedUpdates
 
 from heroine import Heroine
 from helpers import *
 import resource_manager
+import common
 
 
 class Game(object):
@@ -70,7 +71,7 @@ class Game(object):
         })
 
         # Load first scenario
-        self.scenario = self.load_scenario('scenario1')
+        self.load_scenario('scenario1')
         print self.scenario
 
         # Launch main loop
@@ -85,12 +86,9 @@ class Game(object):
             time = self.clock.tick(self.fps)
 
     def load_scenario(self, scenario_name):
-        # Load scenario functions from module
-        scenario_module = __import__(scenario_name)
-        # Create list of "time - function ref" pairs
-        # Function refs are named as 'step%%time%%'
-        step_list = [(int(k[4:]), v) for k, v in scenario_module.__dict__.items() if k.startswith('step')]
-        return sorted(step_list, key=lambda step: step[0])
+        """ Load scenario functions from module """
+        # self.scenario = __import__(scenario_name, fromlist=['scenario']).scenario
+        self.scenario = importlib.import_module('src.%s' % scenario_name).scenario
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -149,25 +147,20 @@ class Game(object):
         pygame.sprite.groupcollide(self.heroine_shots_group, self.enemies_group, True, True)
 
 
-class Field(Sprite):
+class Field(DirtySprite):
     def __init__(self, params):
         super(Field, self).__init__(*params.get('groups', []))
         self.rect = Rect((0, 0), params['size'])
         self.image = resource_manager.images[params['image']]
-        self.boundary = Sprite()
+        self.boundary = DirtySprite()
         self.boundary_thickness = params['boundary_thickness']
         self.boundary.rect = Rect(
             -self.boundary_thickness, -self.boundary_thickness,
             self.rect.width + 2 * self.boundary_thickness, self.rect.height + 2 * self.boundary_thickness)
 
 
-class Background(Sprite):
+class Background(DirtySprite):
     def __init__(self, params):
         super(Background, self).__init__(*params.get('groups', []))
         self.rect = Rect((0, 0), params['size'])
         self.image = resource_manager.images[params['image']]
-
-
-
-if __name__ == '__main__':
-    Game()

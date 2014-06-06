@@ -21,7 +21,7 @@ class Projectile(DirtySprite):
         cls.image_id = image_id
         cls.damage = damage
 
-    def __init__(self, pos=(0, 0), groups=[], func=None):
+    def __init__(self, pos=(0, 0), func=None, groups=[]):
         super(Projectile, self).__init__(*groups)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)
