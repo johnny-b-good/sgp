@@ -5,3 +5,11 @@
 
 
 300s Raven appears at (10,100) and moves linear(angle=0, speed=300) and attacks with simple Pellet
+
+
+
+300s:
+    Fairy:
+        appears: (100, 500)
+        moves: {100s: linear(90, 100), 200s: wait, 400s: linear (0, 200)}
+        attacks: (aimed, RedFireball, (from 100s every 10s)) ИЛИ (linear(0, 700), Pellet, (at (200s, 300s, 400s, 800s))

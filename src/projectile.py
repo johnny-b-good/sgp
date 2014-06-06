@@ -12,6 +12,8 @@ class Projectile(DirtySprite):
 
     You should not use it normally, make a subclass, will ya?
     """
+    # TODO - нафиг сабклассы, картинку и урон в параметры?
+    # TODO - сабклассы для выстрелов героини? Там максимум кеша
 
     @classmethod
     def setup_class_attrs(cls, image_id, damage):
