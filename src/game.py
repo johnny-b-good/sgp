@@ -69,6 +69,10 @@ class Game(object):
             'playfield': self.playfield
         })
 
+        # Load first scenario
+        self.scenario = self.load_scenario('scenario1')
+        print self.scenario
+
         # Launch main loop
         time = 0
         while True:
@@ -80,8 +84,13 @@ class Game(object):
             pygame.display.flip()
             time = self.clock.tick(self.fps)
 
-    def load_scenarios(self):
-        pass
+    def load_scenario(self, scenario_name):
+        # Load scenario functions from module
+        scenario_module = __import__(scenario_name)
+        # Create list of "time - function ref" pairs
+        # Function refs are named as 'step%%time%%'
+        step_list = [(int(k[4:]), v) for k, v in scenario_module.__dict__.items() if k.startswith('step')]
+        return sorted(step_list, key=lambda step: step[0])
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -124,8 +133,8 @@ class Game(object):
             # print self.heroine_shots_group, self.everything_group
         
         if keys[K_ESCAPE]:
-	    pygame.quit()
-	    sys.exit()
+            pygame.quit()
+            sys.exit()
 
     def handle_collisions(self):
         # Remove heroine's and enemy's shots that left the field
