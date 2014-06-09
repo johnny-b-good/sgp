@@ -7,11 +7,13 @@ import resource_manager
 import attack
 import movement
 import common
+from helpers import Position
 
 
 class Enemy(DirtySprite):
     image_id = 'enemy.png'
     health = 100
+    pos = Position()
 
     def __init__(self, pos, moving=[], attacking=[]):
         super(Enemy, self).__init__(common.enemies_group, common.everything_group)
@@ -22,14 +24,6 @@ class Enemy(DirtySprite):
         self._shooting_timer = 0
         self.movement = movement
         self.attack = attack
-
-    @property
-    def pos(self):
-        return self.rect.center
-
-    @pos.setter
-    def pos(self, new_pos):
-        self.rect.center = new_pos
 
     def _move(self, time):
         pass

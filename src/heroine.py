@@ -27,6 +27,7 @@ class Heroine(DirtySprite):
     MAX_BOMBS = 9
 
     groups = [common.everything_group]
+    pos = Position(callback='on_pos_update')
 
     def __init__(self, pos, image_id, lives, bombs,
                  base_speed, focus_mod, hitbox):
@@ -54,6 +55,9 @@ class Heroine(DirtySprite):
         self.playfield = common.playfield
         # TODO: DOCUMENT ME
         self.shot_timer = 0
+
+    def on_pos_update(self):
+        self.hitbox.pos = self.pos
 
     def move(self, angle, time):
         """Move heroine on screen"""
@@ -130,19 +134,10 @@ class Heroine(DirtySprite):
     def bomb(self, time):
         pass
 
-    @property
-    def pos(self):
-        """Heroine's position on screen"""
-        return self.rect.center
-
-    @pos.setter
-    def pos(self, new_pos):
-        self.rect.center = new_pos
-        self.hitbox.pos = new_pos
-
 
 class Hitbox(DirtySprite):
     groups = [common.everything_group]
+    pos = Position()
 
     """ Heroine's hitbox sprite """
     def __init__(self, pos, image_id):
@@ -162,14 +157,6 @@ class Hitbox(DirtySprite):
             return self._image
         else:
             return self._null_image
-
-    @property
-    def pos(self):
-        return self.rect.center
-
-    @pos.setter
-    def pos(self, new_pos):
-        self.rect.center = new_pos
 
 
 class Daria(Heroine):

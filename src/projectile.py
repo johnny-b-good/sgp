@@ -6,6 +6,7 @@ from pygame.sprite import DirtySprite
 import resource_manager
 import movement
 import common
+from helpers import Position
 
 
 class Projectile(DirtySprite):
@@ -17,6 +18,7 @@ class Projectile(DirtySprite):
     image_id = 'pellet_pink.png'
     default_func = None
     groups = [common.enemy_shots_group, common.everything_group]
+    pos = Position()
 
     @classmethod
     def setup_class_attrs(cls, image_id, damage):
@@ -35,14 +37,6 @@ class Projectile(DirtySprite):
             # __func__ is needed to unbind default_func from instance
             # https://docs.python.org/2/reference/datamodel.html
             self.func = self.default_func.__func__
-
-    @property
-    def pos(self):
-        return self.rect.center
-
-    @pos.setter
-    def pos(self, new_pos):
-        self.rect.center = new_pos
 
     def update(self, time):
         self.pos = self.func(self.pos, time)
