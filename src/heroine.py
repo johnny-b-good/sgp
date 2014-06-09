@@ -123,8 +123,7 @@ class Heroine(DirtySprite):
             attack.single(projectile_type=HeroineBasicShot,
                           starting_pos=self.pos,
                           movement_type=movement.linear,
-                          movement_params={'angle': 90, 'speed': 700},
-                          groups=self.heroine_shots_groups)
+                          movement_params={'angle': 90, 'speed': 700})
             self.shot_timer = 0
 
     def bomb(self, time):

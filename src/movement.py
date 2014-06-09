@@ -22,7 +22,7 @@ def linear(angle=0, speed=100):
     return move
 
 
-def aimed(self, aim_pos=0, speed=100):
+def aimed(self, aim_pos=(0, 0), speed=100):
     angle = int(math.atan(
         (self.pos[0] - aim_pos.pos[0]) /
         (self.pos[1] - aim_pos.pos[1])

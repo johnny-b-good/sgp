@@ -5,19 +5,18 @@ from pygame.sprite import DirtySprite
 
 import resource_manager
 import attack
+import movement
+import common
 
 
 class Enemy(DirtySprite):
     image_id = 'enemy.png'
-    health = 1
+    health = 100
 
-    def __init__(self, pos, movement, attack, groups=[]):
-        super(Enemy, self).__init__(*groups)
+    def __init__(self, pos, moving=[], attacking=[]):
+        super(Enemy, self).__init__(common.enemies_group, common.everything_group)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)
-
-        self.heroine = params['heroine']
-        self.enemy_shots_group = params['enemy_shots_groups']
 
         self._movement_timer = 0
         self._shooting_timer = 0
@@ -41,3 +40,5 @@ class Enemy(DirtySprite):
     def update(self, time):
         pass
 
+    def hit(self, damage):
+        pass

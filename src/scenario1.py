@@ -1,13 +1,11 @@
-from __future__ import print_function
+import common
+from enemy import *
 
 
-def step100():
-    print('test 1')
+def dummy_enemy(pos):
+    return lambda: Enemy(pos)
 
 
-scenario = [
-    (100, step100),
-    (200, lambda: print('test 2')),
-    (300, lambda: print('test 3')),
-    (400, lambda: print('test 4')),
-]
+scenario = map(lambda x: (3000, dummy_enemy((x, 100))), range(100, 600, 100)) + \
+           map(lambda x: (6000, dummy_enemy((x, 200))), range(100, 600, 100)) + \
+           map(lambda x: (9000, dummy_enemy((x, 300))), range(100, 600, 100))

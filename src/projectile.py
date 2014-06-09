@@ -5,6 +5,7 @@ import pygame
 from pygame.sprite import DirtySprite
 import resource_manager
 import movement
+import common
 
 
 class Projectile(DirtySprite):
@@ -15,14 +16,19 @@ class Projectile(DirtySprite):
     # TODO - нафиг сабклассы, картинку и урон в параметры?
     # TODO - сабклассы для выстрелов героини? Там максимум кеша
 
+    damage = 0
+    image_id = 'pellet_pink.png'
+    groups = [common.enemy_shots_group, common.everything_group]
+    func = None
+
     @classmethod
     def setup_class_attrs(cls, image_id, damage):
         """Setup class attributes"""
         cls.image_id = image_id
         cls.damage = damage
 
-    def __init__(self, pos=(0, 0), func=None, groups=[]):
-        super(Projectile, self).__init__(*groups)
+    def __init__(self, pos=(0, 0), func=None):
+        super(Projectile, self).__init__(*self.groups)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)
         self.func = func
@@ -43,5 +49,6 @@ class Projectile(DirtySprite):
 class HeroineBasicShot(Projectile):
     """Basic heroine's shot - A glowing blue rectangle"""
     # func = movement.linear(angle=45, speed=700)
+    damage = 1
     image_id = 'shot2.png'
-    damage = 10
+    groups = [common.heroine_shots_group, common.everything_group]

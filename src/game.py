@@ -5,7 +5,7 @@ import sys
 import importlib
 import pygame
 from pygame.locals import *
-from pygame.sprite import DirtySprite, Group, OrderedUpdates
+from pygame.sprite import DirtySprite
 
 from heroine import Heroine
 from helpers import *
@@ -17,47 +17,39 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.display = pygame.display.set_mode((800, 600))
+        self.display = pygame.display.set_mode((800, 600), FULLSCREEN)
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
         self.fps = 60
-
-        # Create sprite groups
-        self.everything_group = OrderedUpdates()
-        self.heroine_shots_group = Group()
-        self.enemies_group = Group()
-        self.enemy_shots_group = Group()
-        self.explosions_group = Group()
-        self.bonuses_group = Group()
-        self.indicators_group = Group()
+        self.total_time = 0
 
         # Create background
         self.background = Background({
             'image': 'background.png',
             'size': (800, 600),
-            'groups': [self.everything_group],
+            'groups': [common.everything_group],
         })
 
         # Create playfield
         self.playfield = Field({
             'size': (600, 600),
             'image': 'field.png',
-            'groups': [self.everything_group],
+            'groups': [common.everything_group],
             'boundary_thickness': 300
         })
 
         # Create heroine
-        self.heroine = Heroine({
-            'pos': (400, 500),
+        common.heroine = self.heroine = Heroine({
+            'pos': (300, 500),
 
             'sprite_size': (20, 50),
-            'sprite_image': 'daria.png',
-            'sprite_groups': [self.everything_group],
+            'sprite_image': 'daria2.png',
+            'sprite_groups': [common.everything_group],
 
             'hitbox_size': (8, 8),
             'hitbox_image': 'hitbox3.png',
-            'hitbox_groups': [self.everything_group],
+            'hitbox_groups': [common.everything_group],
 
             'lives': 3,
             'bombs': 3,
@@ -65,7 +57,7 @@ class Game(object):
             'speed': 300,
             'focus_coefficient': 0.5,
 
-            'heroine_shots_groups': [self.heroine_shots_group, self.everything_group],
+            'heroine_shots_groups': [common.heroine_shots_group, common.everything_group],
 
             'playfield': self.playfield
         })
@@ -79,16 +71,27 @@ class Game(object):
         while True:
             self.handle_events()
             self.handle_user_input(time)
+            self.play_scenario()
             self.handle_collisions()
-            self.everything_group.update(time)
-            self.everything_group.draw(self.display)
+            common.everything_group.update(time)
+            common.everything_group.draw(self.display)
             pygame.display.flip()
             time = self.clock.tick(self.fps)
+            self.total_time += time
 
     def load_scenario(self, scenario_name):
-        """ Load scenario functions from module """
+        """ Load scenario steps from module """
         # self.scenario = __import__(scenario_name, fromlist=['scenario']).scenario
         self.scenario = importlib.import_module('src.%s' % scenario_name).scenario
+
+    def play_scenario(self):
+        # print self.total_time, len(self.scenario)
+        for index, (time, step) in enumerate(self.scenario):
+            if time <= self.total_time:
+                step()
+                self.scenario.pop(index)
+            else:
+                break
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -128,25 +131,30 @@ class Game(object):
         # Shoot the bullet, lol
         if keys[K_x]:
             self.heroine.shoot(time)
-            # print self.heroine_shots_group, self.everything_group
-        
+            # print common.heroine_shots_group, common.everything_group
+
+        # Exit game with the Esc button
         if keys[K_ESCAPE]:
             pygame.quit()
             sys.exit()
 
     def handle_collisions(self):
         # Remove heroine's and enemy's shots that left the field
-        pygame.sprite.spritecollide(self.playfield.boundary, self.heroine_shots_group, True, detect_boundary_leaving)
-        pygame.sprite.spritecollide(self.playfield.boundary, self.enemy_shots_group, True, detect_boundary_leaving)
+        pygame.sprite.spritecollide(self.playfield.boundary, common.heroine_shots_group, True, detect_boundary_leaving)
+        pygame.sprite.spritecollide(self.playfield.boundary, common.enemy_shots_group, True, detect_boundary_leaving)
 
         # Heroine is hit by enemy projectile or enemy itself
-        pygame.sprite.spritecollide(self.heroine, self.enemy_shots_group, True)
-        pygame.sprite.spritecollide(self.heroine, self.enemies_group, True)
+        pygame.sprite.spritecollide(self.heroine, common.enemy_shots_group, True)
+        pygame.sprite.spritecollide(self.heroine, common.enemies_group, True)
 
         # Destroy enemies with heroine's shots
-        pygame.sprite.groupcollide(self.heroine_shots_group, self.enemies_group, True, True)
+        enemy_and_projectiles_collisions = pygame.sprite.groupcollide(common.heroine_shots_group, common.enemies_group, True, False)
+        # for dead_people in enemy_and_projectiles_collisions.values():
+        #     for enemies in dead_people:
+        #         enemy_hit
 
 
+# TODO field and background convert to surfaces?
 class Field(DirtySprite):
     def __init__(self, params):
         super(Field, self).__init__(*params.get('groups', []))
