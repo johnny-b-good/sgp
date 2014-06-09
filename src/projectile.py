@@ -11,15 +11,12 @@ import common
 class Projectile(DirtySprite):
     """Abstract projectile class
 
-    You should not use it normally, make a subclass, will ya?
+    Normally you should not use it , make a subclass, will ya?
     """
-    # TODO - нафиг сабклассы, картинку и урон в параметры?
-    # TODO - сабклассы для выстрелов героини? Там максимум кеша
-
     damage = 0
     image_id = 'pellet_pink.png'
+    default_func = None
     groups = [common.enemy_shots_group, common.everything_group]
-    func = None
 
     @classmethod
     def setup_class_attrs(cls, image_id, damage):
@@ -31,8 +28,13 @@ class Projectile(DirtySprite):
         super(Projectile, self).__init__(*self.groups)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)
-        self.func = func
-        # TODO func cached in da class?
+
+        if func:
+            self.func = func
+        elif self.default_func:
+            # __func__ is needed to unbind default_func from instance
+            # https://docs.python.org/2/reference/datamodel.html
+            self.func = self.default_func.__func__
 
     @property
     def pos(self):
@@ -48,7 +50,7 @@ class Projectile(DirtySprite):
 
 class HeroineBasicShot(Projectile):
     """Basic heroine's shot - A glowing blue rectangle"""
-    # func = movement.linear(angle=45, speed=700)
     damage = 1
     image_id = 'shot2.png'
+    default_func = movement.linear(angle=90, speed=700)
     groups = [common.heroine_shots_group, common.everything_group]

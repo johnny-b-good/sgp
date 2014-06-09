@@ -7,7 +7,7 @@ import pygame
 from pygame.locals import *
 from pygame.sprite import DirtySprite
 
-from heroine import Heroine
+from heroine import Daria
 from helpers import *
 import resource_manager
 import common
@@ -17,7 +17,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.display = pygame.display.set_mode((800, 600), FULLSCREEN)
+        self.display = pygame.display.set_mode((800, 600))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -32,7 +32,7 @@ class Game(object):
         })
 
         # Create playfield
-        self.playfield = Field({
+        common.playfield = self.playfield = Field({
             'size': (600, 600),
             'image': 'field.png',
             'groups': [common.everything_group],
@@ -40,27 +40,7 @@ class Game(object):
         })
 
         # Create heroine
-        common.heroine = self.heroine = Heroine({
-            'pos': (300, 500),
-
-            'sprite_size': (20, 50),
-            'sprite_image': 'daria2.png',
-            'sprite_groups': [common.everything_group],
-
-            'hitbox_size': (8, 8),
-            'hitbox_image': 'hitbox3.png',
-            'hitbox_groups': [common.everything_group],
-
-            'lives': 3,
-            'bombs': 3,
-
-            'speed': 300,
-            'focus_coefficient': 0.5,
-
-            'heroine_shots_groups': [common.heroine_shots_group, common.everything_group],
-
-            'playfield': self.playfield
-        })
+        common.heroine = self.heroine = Daria()
 
         # Load first scenario
         self.load_scenario('scenario1')

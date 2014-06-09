@@ -1,9 +1,12 @@
 import movement
 
 
-def single(projectile_type, starting_pos, movement_type, movement_params={}):
+def single(projectile_type, starting_pos, movement_type=None, movement_params={}):
     """Single bullet attack pattern"""
-    projectile_type(pos=starting_pos, func=movement_type(**movement_params))
+    if movement_type:
+        projectile_type(pos=starting_pos, func=movement_type(**movement_params))
+    else:
+        projectile_type(pos=starting_pos)
 
 
 # def shotgun(projectile_type, starting_pos, speed=100, angle=0, aim_pos=None, spread_angle=30, projectile_num=5):

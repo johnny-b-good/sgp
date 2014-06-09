@@ -1,13 +1,19 @@
-from pygame.sprite import Group, OrderedUpdates
+from pygame.sprite import Group, LayeredDirty, OrderedUpdates
 
 # Groups
-everything_group = OrderedUpdates()
 heroine_shots_group = Group()
 enemies_group = Group()
 enemy_shots_group = Group()
 explosions_group = Group()
 bonuses_group = Group()
 indicators_group = Group()
+everything_group = OrderedUpdates()
 
 # Heroine reference
 heroine = None
+
+# Layer order constants
+LAYERS = {}
+
+# Playfield reference
+playfield = None
