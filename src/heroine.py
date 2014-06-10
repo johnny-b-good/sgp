@@ -57,7 +57,13 @@ class Heroine(DirtySprite):
         self.shot_timer = 0
 
     def on_pos_update(self):
+        """ Callback on heroine's movement
+
+        Update hitbox position and set dirty flags for heroine and her hitbox
+        """
+        self.dirty = 1
         self.hitbox.pos = self.pos
+        self.hitbox.dirty = 1
 
     def move(self, angle, time):
         """Move heroine on screen"""
@@ -81,11 +87,11 @@ class Heroine(DirtySprite):
         if y < self.hitbox.rect.height / 2:
             y = self.hitbox.rect.height / 2
 
-        if x > self.playfield.rect.width - self.hitbox.rect.width / 2:
-            x = self.playfield.rect.width - self.hitbox.rect.width / 2
+        if x > self.playfield.width - self.hitbox.rect.width / 2:
+            x = self.playfield.width - self.hitbox.rect.width / 2
 
-        if y > self.playfield.rect.height - self.hitbox.rect.height / 2:
-            y = self.playfield.rect.height - self.hitbox.rect.height / 2
+        if y > self.playfield.height - self.hitbox.rect.height / 2:
+            y = self.playfield.height - self.hitbox.rect.height / 2
 
         return x, y
 

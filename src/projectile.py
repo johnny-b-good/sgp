@@ -39,6 +39,7 @@ class Projectile(DirtySprite):
             self.func = self.default_func.__func__
 
     def update(self, time):
+        self.dirty = 1
         self.pos = self.func(self.pos, time)
 
 

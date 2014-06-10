@@ -26,6 +26,7 @@ class Enemy(DirtySprite):
         self.attack = attack
 
     def _move(self, time):
+        self.dirty = 1
         pass
 
     def _attack(self, time):
