@@ -12,7 +12,7 @@ from helpers import Position
 
 class Enemy(DirtySprite):
     image_id = 'enemy.png'
-    health = 100
+    health = 10
     pos = Position()
 
     def __init__(self, pos, moving=[], attacking=[]):
@@ -35,4 +35,9 @@ class Enemy(DirtySprite):
         pass
 
     def hit(self, damage):
-        pass
+        self.health -= damage
+        if self.health <= 0:
+            self.die()
+
+    def die(self):
+        self.kill()

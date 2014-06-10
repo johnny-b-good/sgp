@@ -26,12 +26,12 @@ class Heroine(DirtySprite):
     MAX_LIVES = 9
     MAX_BOMBS = 9
 
-    groups = [common.everything_group]
+    sprite_groups = [common.everything_group]
     pos = Position(callback='on_pos_update')
 
     def __init__(self, pos, image_id, lives, bombs,
                  base_speed, focus_mod, hitbox):
-        super(Heroine, self).__init__(*self.groups)
+        super(Heroine, self).__init__(*self.sprite_groups)
         # Load sprite's image
         self.image = resource_manager.images[image_id]
         # Sprite's rect
@@ -136,12 +136,12 @@ class Heroine(DirtySprite):
 
 
 class Hitbox(DirtySprite):
-    groups = [common.everything_group]
+    sprite_groups = [common.everything_group]
     pos = Position()
 
     """ Heroine's hitbox sprite """
     def __init__(self, pos, image_id):
-        super(Hitbox, self).__init__(*self.groups)
+        super(Hitbox, self).__init__(*self.sprite_groups)
         # Load hitbox's image
         self._image = resource_manager.images[image_id]
         # Create hitbox's rectangle and set it's position

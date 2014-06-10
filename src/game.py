@@ -128,10 +128,10 @@ class Game(object):
         pygame.sprite.spritecollide(self.heroine, common.enemies_group, True)
 
         # Destroy enemies with heroine's shots
-        enemy_and_projectiles_collisions = pygame.sprite.groupcollide(common.heroine_shots_group, common.enemies_group, True, False)
-        # for dead_people in enemy_and_projectiles_collisions.values():
-        #     for enemies in dead_people:
-        #         enemy_hit
+        damaged_enemies = pygame.sprite.groupcollide(common.enemies_group, common.heroine_shots_group, False, True)
+        for enemy, projectiles in damaged_enemies.items():
+            total_damage = sum(map(lambda p: p.damage, projectiles))
+            enemy.hit(total_damage)
 
 
 # TODO field and background convert to surfaces?

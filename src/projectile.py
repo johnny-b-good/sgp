@@ -17,7 +17,7 @@ class Projectile(DirtySprite):
     damage = 0
     image_id = 'pellet_pink.png'
     default_func = None
-    groups = [common.enemy_shots_group, common.everything_group]
+    sprite_groups = [common.enemy_shots_group, common.everything_group]
     pos = Position()
 
     @classmethod
@@ -27,7 +27,7 @@ class Projectile(DirtySprite):
         cls.damage = damage
 
     def __init__(self, pos=(0, 0), func=None):
-        super(Projectile, self).__init__(*self.groups)
+        super(Projectile, self).__init__(*self.sprite_groups)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)
 
@@ -47,4 +47,4 @@ class HeroineBasicShot(Projectile):
     damage = 1
     image_id = 'shot2.png'
     default_func = movement.linear(angle=90, speed=700)
-    groups = [common.heroine_shots_group, common.everything_group]
+    sprite_groups = [common.heroine_shots_group, common.everything_group]
