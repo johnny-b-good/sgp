@@ -52,7 +52,7 @@ class Heroine(DirtySprite):
         # # Number of bombs
         self.bombs = bombs
         # Reference to playfield object
-        self.playfield = common.playfield
+        self.playfield = common.playfield_boundary
         # TODO: DOCUMENT ME
         self.shot_timer = 0
 

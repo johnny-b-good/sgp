@@ -17,45 +17,22 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        # TODO - rename display to screen
-        self.display = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((800, 600))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
         self.fps = 60
         self.total_time = 0
 
-        # # Create background
-        # self.background = Background({
-        #     'image': 'background.png',
-        #     'size': (800, 600),
-        #     'groups': [common.everything_group],
-        # })
-        #
-        # # Create playfield
-        # common.playfield = self.playfield = Field({
-        #     'size': (600, 600),
-        #     'image': 'field.png',
-        #     'groups': [common.everything_group],
-        #     'boundary_thickness': 300
-        # })
-
-        # TODO - document me
+        # Load playfield image, blit it to the screen and update
         self.playfield_surface = resource_manager.images['field.png']
-        self.display.blit(self.playfield_surface, Rect(0, 0, 600, 600))
-        pygame.display.flip()  # TODO - Gotta flip to update screen
+        self.screen.blit(self.playfield_surface, Rect(0, 0, 600, 600))
+        pygame.display.flip()
 
-        common.playfield = self.playfield_boundary = self.playfield_surface.get_rect()
-
-        self.boundary_thickness = 300  # TODO - NO MAGIC ALLOWED
-        self.playfield_outer_boundary = Rect(
-            -self.boundary_thickness, -self.boundary_thickness,
-            self.playfield_boundary.width + 2 * self.boundary_thickness,
-            self.playfield_boundary.height + 2 * self.boundary_thickness
-        )
-
-
-
+        # Create inner and outer playfield boundaries
+        # TODO - NO MAGIC ALLOWED
+        self.playfield_boundary, self.playfield_outer_boundary = self._create_boundaries(300)
+        common.playfield_boundary = self.playfield_boundary
 
         # Create heroine
         common.heroine = self.heroine = Daria()
@@ -66,24 +43,36 @@ class Game(object):
         # Launch main loop
         time = 0
         while True:
-            # Clean screen with background
-            common.everything_group.clear(self.display, self.playfield_surface)
+            # Clean screen of sprites with background
+            common.everything_group.clear(self.screen, self.playfield_surface)
 
+            # TODO - document those
             self.handle_events()
             self.handle_user_input(time)
             self.play_scenario()
             self.handle_collisions()
             common.everything_group.update(time)
 
-            updated = common.everything_group.draw(self.display)
+            # Repaint screen with updated sprites
+            updated = common.everything_group.draw(self.screen)
             pygame.display.update(updated)
 
+            # Advance time
             time = self.clock.tick(self.fps)
             self.total_time += time
 
+    def _create_boundaries(self, thickness):
+        """ Create inner and outer playfield boundaries """
+        inner_boundary = self.playfield_surface.get_rect()
+        outer_boundary = Rect(
+            -thickness, -thickness,
+            inner_boundary.width + 2 * thickness,
+            inner_boundary.height + 2 * thickness
+        )
+        return inner_boundary, outer_boundary
+
     def load_scenario(self, scenario_name):
         """ Load scenario steps from module """
-        # self.scenario = __import__(scenario_name, fromlist=['scenario']).scenario
         self.scenario = importlib.import_module('src.%s' % scenario_name).scenario
 
     def play_scenario(self):
@@ -133,7 +122,6 @@ class Game(object):
         # Shoot the bullet, lol
         if keys[K_x]:
             self.heroine.shoot(time)
-            # print common.heroine_shots_group, common.everything_group
 
         # Exit game with the Esc button
         if keys[K_ESCAPE]:
@@ -142,45 +130,16 @@ class Game(object):
 
     def handle_collisions(self):
         # Remove heroine's and enemy's shots that left the field
-        # TODO - create common group for shots
-        # TODO - remove boundary from helpers
-        for sprite in common.heroine_shots_group:
+        for sprite in common.all_shots_group:
             if not self.playfield_outer_boundary.contains(sprite.rect):
                 sprite.kill()
-
-        # TODO - restore this shit
-        # pygame.sprite.spritecollide(self.playfield.boundary, common.heroine_shots_group, True, detect_boundary_leaving)
-        # pygame.sprite.spritecollide(self.playfield.boundary, common.enemy_shots_group, True, detect_boundary_leaving)
 
         # Heroine is hit by enemy projectile or enemy itself
         pygame.sprite.spritecollide(self.heroine, common.enemy_shots_group, True)
         pygame.sprite.spritecollide(self.heroine, common.enemies_group, True)
 
         # Destroy enemies with heroine's shots
-        damaged_enemies = pygame.sprite.groupcollide(common.enemies_group, common.heroine_shots_group, False, True)
-        for enemy, projectiles in damaged_enemies.items():
+        all_hits = pygame.sprite.groupcollide(common.enemies_group, common.heroine_shots_group, False, True)
+        for enemy, projectiles in all_hits.items():
             total_damage = sum(map(lambda p: p.damage, projectiles))
             enemy.hit(total_damage)
-
-
-
-# # TODO field and background convert to surfaces?
-# class Field(DirtySprite):
-#     def __init__(self, params):
-#         super(Field, self).__init__(*params.get('groups', []))
-#         self.rect = Rect((0, 0), params['size'])
-#         self.image = resource_manager.images[params['image']]
-#         self.boundary = DirtySprite()
-#         self.boundary_thickness = params['boundary_thickness']
-#         self.boundary.rect = Rect(
-#             -self.boundary_thickness, -self.boundary_thickness,
-#             self.rect.width + 2 * self.boundary_thickness,
-#             self.rect.height + 2 * self.boundary_thickness
-#         )
-#
-#
-# class Background(DirtySprite):
-#     def __init__(self, params):
-#         super(Background, self).__init__(*params.get('groups', []))
-#         self.rect = Rect((0, 0), params['size'])
-#         self.image = resource_manager.images[params['image']]

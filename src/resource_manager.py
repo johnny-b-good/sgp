@@ -52,6 +52,7 @@ def _load_images():
 
         image = image.convert_alpha()
 
+        # TODO - do we really need this shit?
         # if colorkey is not None:
         #     if colorkey is -1:
         #         colorkey = image.get_at((0,0))
