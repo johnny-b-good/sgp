@@ -42,3 +42,8 @@ class Enemy(DirtySprite):
 
     def die(self):
         self.kill()
+
+
+class Raven(Enemy):
+    image_id = 'raven.png'
+    health = 32

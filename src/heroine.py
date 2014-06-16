@@ -170,7 +170,7 @@ class Daria(Heroine):
     def __init__(self):
         super(Daria, self).__init__(
             pos=(300, 500),
-            image_id='daria.png',
+            image_id='daria4.png',
             lives=3,
             bombs=3,
             base_speed=300,

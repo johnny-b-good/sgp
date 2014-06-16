@@ -1,3 +1,4 @@
+# TODO - relative coordinates
 class Position(object):
     """Sprite position reusable property
 

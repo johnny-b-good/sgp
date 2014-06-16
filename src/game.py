@@ -17,7 +17,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((1280, 720), FULLSCREEN)
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -26,7 +26,7 @@ class Game(object):
 
         # Load playfield image, blit it to the screen and update
         self.playfield_surface = resource_manager.images['field.png']
-        self.screen.blit(self.playfield_surface, Rect(0, 0, 600, 600))
+        self.screen.blit(self.playfield_surface, Rect(0, 0, 720, 720))
         pygame.display.flip()
 
         # Create inner and outer playfield boundaries

@@ -46,6 +46,6 @@ class Projectile(DirtySprite):
 class HeroineBasicShot(Projectile):
     """Basic heroine's shot - A glowing blue rectangle"""
     damage = 1
-    image_id = 'shot2.png'
-    default_func = movement.linear(angle=90, speed=700)
+    image_id = 'shot3.png'
+    default_func = movement.linear(angle=90, speed=1000)
     sprite_groups = [common.heroine_shots_group, common.all_shots_group, common.everything_group]
