@@ -31,10 +31,16 @@ def _create_file_id(name):
     return '/'.join(path_list)
 
 
-def _get_files_dict(root):
+def _check_file_extention(filename, extentions):
+    name, ext = os.path.splitext(filename)
+    return ext in extentions
+
+
+def _get_files_dict(root, extentions=[]):
     """ Create a dict of file_id:file_path pairs from a list of file_paths"""
     names = []
     for current_dir, dirs, files in os.walk(root):
+        files = filter(lambda f: _check_file_extention(f, extentions), files)
         names += map(lambda f: os.path.join(current_dir, f), files)
 
     return dict((_create_file_id(name), name) for name in names)
@@ -42,7 +48,7 @@ def _get_files_dict(root):
 
 def _load_images():
     """ Recursivly load all images from directory """
-    files_dict = _get_files_dict(IMAGES_DIR)
+    files_dict = _get_files_dict(IMAGES_DIR, ['.png'])
 
     for file_id, file_path in files_dict.iteritems():
         try:

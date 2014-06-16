@@ -17,7 +17,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
-        self.screen = pygame.display.set_mode((1280, 720), FULLSCREEN)
+        self.screen = pygame.display.set_mode((1280, 720))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
