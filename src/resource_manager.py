@@ -32,6 +32,7 @@ def _create_file_id(name):
 
 
 def _check_file_extention(filename, extentions):
+    """ Check if file has extention that's defined in extentions list """
     name, ext = os.path.splitext(filename)
     return ext in extentions
 

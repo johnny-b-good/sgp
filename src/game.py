@@ -17,6 +17,7 @@ class Game(object):
     def __init__(self):
         # Initialize basic stuff
         pygame.init()
+        # TODO - NO MAGIC ALLOWED
         self.screen = pygame.display.set_mode((1280, 720))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
@@ -26,6 +27,7 @@ class Game(object):
 
         # Load playfield image, blit it to the screen and update
         self.playfield_surface = resource_manager.images['field.png']
+        # TODO - NO MAGIC ALLOWED
         self.screen.blit(self.playfield_surface, Rect(0, 0, 720, 720))
         pygame.display.flip()
 
@@ -46,9 +48,11 @@ class Game(object):
             # Clean screen of sprites with background
             common.everything_group.clear(self.screen, self.playfield_surface)
 
-            # TODO - document those
+            # User input
             self.handle_events()
             self.handle_user_input(time)
+
+            # Update states of sprites
             self.play_scenario()
             self.handle_collisions()
             common.everything_group.update(time)

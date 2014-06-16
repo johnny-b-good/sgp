@@ -80,6 +80,15 @@ class Heroine(DirtySprite):
     def _prevent_boundary_collision(self, x, y):
         """Check field boundary collision"""
         # TODO - remove repetitions
+        # if self.hitbox.rect.bottom > self.playfield.bottom:
+        #     self.hitbox.rect.bottom = self.playfield.bottom
+        # elif self.hitbox.rect.top < self.playfield.top:
+        #     self.hitbox.rect.top = self.playfield.top
+        #
+        # if self.hitbox.rect.left < self.playfield.left:
+        #     self.hitbox.rect.left = self.playfield.left
+        # elif self.hitbox.rect.right > self.playfield.right:
+        #     self.hitbox.rect.right = self.playfield.right
 
         if x < self.hitbox.rect.width / 2:
             x = self.hitbox.rect.width / 2
