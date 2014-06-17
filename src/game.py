@@ -45,19 +45,20 @@ class Game(object):
         # Launch main loop
         time = 0
         while True:
-            # Clean screen of sprites with background
-            common.everything_group.clear(self.screen, self.playfield_surface)
-
             # User input
             self.handle_events()
             self.handle_user_input(time)
 
-            # Update states of sprites
+            # TODO - URGENT! Refactor game scenarios:
+            # Put enemy creating here
             self.play_scenario()
+
+            # Update states of sprites
             self.handle_collisions()
             common.everything_group.update(time)
 
             # Repaint screen with updated sprites
+            common.everything_group.clear(self.screen, self.playfield_surface)
             updated = common.everything_group.draw(self.screen)
             pygame.display.update(updated)
 
@@ -95,6 +96,7 @@ class Game(object):
                 sys.exit()
 
     def handle_user_input(self, time):
+        # TODO - set only states here, move attacks and movement to Heroine's update method
         # Focus
         mod_keys = pygame.key.get_mods()
         if mod_keys & KMOD_SHIFT:
@@ -133,6 +135,8 @@ class Game(object):
             sys.exit()
 
     def handle_collisions(self):
+        # TODO Move to separate game logic module?
+        # TODO Change actions to states?
         # Remove heroine's and enemy's shots that left the field
         for sprite in common.all_shots_group:
             if not self.playfield_outer_boundary.contains(sprite.rect):
