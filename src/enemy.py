@@ -11,11 +11,11 @@ from helpers import Position
 
 
 class Enemy(DirtySprite):
-    image_id = 'enemy.png'
-    health = 10
+    image_id = 'dummy.png'
+    health = 16
     pos = Position()
 
-    def __init__(self, pos, moving=[], attacking=[]):
+    def __init__(self, pos=(0, 0), moving=[], attacking=[]):
         super(Enemy, self).__init__(common.enemies_group, common.everything_group)
         self.image = resource_manager.images[self.image_id]
         self.rect = self.image.get_rect(center=pos)

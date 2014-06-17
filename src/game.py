@@ -18,7 +18,7 @@ class Game(object):
         # Initialize basic stuff
         pygame.init()
         # TODO - NO MAGIC ALLOWED
-        self.screen = pygame.display.set_mode((1280, 720))
+        self.screen = pygame.display.set_mode((1280, 720), FULLSCREEN)
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -49,8 +49,7 @@ class Game(object):
             self.handle_events()
             self.handle_user_input(time)
 
-            # TODO - URGENT! Refactor game scenarios:
-            # Put enemy creating here
+            # Play next scenario step(s) - create new sprites
             self.play_scenario()
 
             # Update states of sprites
@@ -68,6 +67,7 @@ class Game(object):
 
     def _create_boundaries(self, thickness):
         """ Create inner and outer playfield boundaries """
+        # TODO - disconnect calculations from surface
         inner_boundary = self.playfield_surface.get_rect()
         outer_boundary = Rect(
             -thickness, -thickness,
@@ -81,10 +81,11 @@ class Game(object):
         self.scenario = importlib.import_module('src.%s' % scenario_name).scenario
 
     def play_scenario(self):
-        # print self.total_time, len(self.scenario)
-        for index, (time, step) in enumerate(self.scenario):
+        """ Create enemies using parameters from scenario """
+        # TODO - optimize this - remove enumerate?
+        for index, (time, (enemy_type, enemy_params)) in enumerate(self.scenario):
             if time <= self.total_time:
-                step()
+                enemy_type(**enemy_params)
                 self.scenario.pop(index)
             else:
                 break

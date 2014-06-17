@@ -5,6 +5,7 @@ class Position(object):
        https://docs.python.org/2/howto/descriptor.html
     """
 
+    # TODO - shift parameter for shadows ans satellites
     def __init__(self, initial_value=(0, 0), callback=None):
         self.value = initial_value
         self.callback = callback
