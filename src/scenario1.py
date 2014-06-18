@@ -1,10 +1,13 @@
 from enemy import *
+import projectile as p
+import attack as a
+import movement as m
 
 
 def dummy_enemy(pos):
-    # attacking = ('after', 10, 'attack every', 200, 'with', 'RedPellet', 'linear', {'angle': 100, 'speed': 200})
-    # attacking = ('at', (10, 20, 30,), 'with', 'RedPellet', 'linear', {'angle': 100, 'speed': 200})
-    return Enemy, {'pos': pos}
+    attack_params = {'projectile_type': p.RedPellet, 'movement_type': m.linear, 'movement_params': {'speed': 200, 'angle': 270}}
+    attack = {'from': 1000, 'times': 9000, 'every': 1000, 'attack_type': a.single, 'attack_params': attack_params}
+    return Enemy, {'pos': pos, 'attack': attack}
 
 # TODO - create a fixed list of enemy spawn points?
 # TODO - 'top', 'left' and 'right' - constants for one of coordinates

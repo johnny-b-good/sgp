@@ -18,7 +18,7 @@ class Game(object):
         # Initialize basic stuff
         pygame.init()
         # TODO - NO MAGIC ALLOWED
-        self.screen = pygame.display.set_mode((1280, 720), FULLSCREEN)
+        self.screen = pygame.display.set_mode((1280, 720))
         resource_manager.init()
         pygame.key.set_repeat(0, 10)
         self.clock = pygame.time.Clock()
@@ -144,8 +144,8 @@ class Game(object):
                 sprite.kill()
 
         # Heroine is hit by enemy projectile or enemy itself
-        pygame.sprite.spritecollide(self.heroine, common.enemy_shots_group, True)
-        pygame.sprite.spritecollide(self.heroine, common.enemies_group, True)
+        pygame.sprite.spritecollide(self.heroine.hitbox, common.enemy_shots_group, True)
+        pygame.sprite.spritecollide(self.heroine.hitbox, common.enemies_group, True)
 
         # Destroy enemies with heroine's shots
         all_hits = pygame.sprite.groupcollide(common.enemies_group, common.heroine_shots_group, False, True)

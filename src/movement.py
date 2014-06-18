@@ -1,4 +1,5 @@
 import math
+import common
 
 
 def linear(angle=0, speed=100):
@@ -22,12 +23,15 @@ def linear(angle=0, speed=100):
     return move
 
 
-def aimed(self, aim_pos=(0, 0), speed=100):
-    angle = int(math.atan(
-        (self.pos[0] - aim_pos.pos[0]) /
-        (self.pos[1] - aim_pos.pos[1])
-    ))
-    return linear(angle=angle, speed=speed)
+# def aimed(self, aim_pos=None, speed=100):
+#     if not aim_pos:
+#         aim_pos = common.heroine.pos
+#
+#     angle = int(math.atan(
+#         (self.pos[0] - aim_pos[0]) /
+#         (self.pos[1] - aim_pos[1])
+#     ))
+#     return linear(angle=angle, speed=speed)
 
 
 def ark():

@@ -14,7 +14,7 @@ class Projectile(DirtySprite):
 
     Normally you should not use it , make a subclass, will ya?
     """
-    damage = 0
+    damage = 1
     image_id = 'pellet_pink.png'
     default_func = None
     sprite_groups = [common.enemy_shots_group, common.all_shots_group, common.everything_group]
@@ -49,3 +49,7 @@ class HeroineBasicShot(Projectile):
     image_id = 'shot3.png'
     default_func = movement.linear(angle=90, speed=1000)
     sprite_groups = [common.heroine_shots_group, common.all_shots_group, common.everything_group]
+
+
+class RedPellet(Projectile):
+    image_id = 'pellet_red.png'

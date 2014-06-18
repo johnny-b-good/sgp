@@ -27,7 +27,7 @@ class Heroine(DirtySprite):
     MAX_BOMBS = 9
 
     sprite_groups = [common.everything_group]
-    pos = Position(callback='on_pos_update')
+    pos = Position(callback='_on_pos_update')
 
     def __init__(self, pos, image_id, lives, bombs,
                  base_speed, focus_mod, hitbox):
@@ -56,7 +56,7 @@ class Heroine(DirtySprite):
         # TODO: DOCUMENT ME
         self.shot_timer = 0
 
-    def on_pos_update(self):
+    def _on_pos_update(self):
         """ Callback on heroine's movement
 
         Update hitbox position and set dirty flags for heroine and her hitbox
