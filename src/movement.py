@@ -2,7 +2,7 @@ import math
 import common
 
 
-def linear(angle=0, speed=100):
+def linear(angle=0, speed=100, **kwargs):
     """Build a function describing linear movement
 
     angle - movement angle in degrees5
@@ -23,15 +23,15 @@ def linear(angle=0, speed=100):
     return move
 
 
-# def aimed(self, aim_pos=None, speed=100):
-#     if not aim_pos:
-#         aim_pos = common.heroine.pos
-#
-#     angle = int(math.atan(
-#         (self.pos[0] - aim_pos[0]) /
-#         (self.pos[1] - aim_pos[1])
-#     ))
-#     return linear(angle=angle, speed=speed)
+def aimed(starting_pos, aim_pos, speed=100, **kwargs):
+    """ Aimed shot """
+    # https://docs.python.org/2/library/math.html#math.atan2
+    angle = math.degrees(math.atan2(
+        # reversed because of pygame's reverted y axis
+        starting_pos[1] - aim_pos[1],
+        aim_pos[0] - starting_pos[0]
+    ))
+    return linear(angle=angle, speed=speed)
 
 
 def ark():

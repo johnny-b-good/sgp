@@ -53,3 +53,7 @@ class HeroineBasicShot(Projectile):
 
 class RedPellet(Projectile):
     image_id = 'pellet_red.png'
+
+
+class WhitePellet(Projectile):
+    image_id = 'pellet_white.png'

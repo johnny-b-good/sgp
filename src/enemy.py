@@ -11,6 +11,7 @@ from helpers import Position
 class Enemy(DirtySprite):
     image_id = 'dummy.png'
     health = 16
+    score_bonus = 100
     pos = Position()
     sprite_groups = (common.enemies_group, common.everything_group)
 
@@ -23,14 +24,15 @@ class Enemy(DirtySprite):
 
         self.movement_timer = 0
 
+        self.can_attack = False
         if attack:
-            # TODO - property naming!
-            self.attack = attack
-            self.shooting_timer = 0
-            self.shooting_counter = 0
+            self.can_attack = True
+            self.attack_timer = 0
+            self.attack_counter = 0
+
             self.attack_delay = attack['from']
-            self.shooting_interval = attack['every']
-            self.num_of_attacks = attack['times']
+            self.attack_interval = attack['every']
+            self.attack_num = attack['times']
             self.attack_type = attack['attack_type']
             self.attack_params = attack['attack_params']
 
@@ -45,24 +47,24 @@ class Enemy(DirtySprite):
             return
 
         # Tick interval between shots
-        self.shooting_timer += time
+        self.attack_timer += time
 
         # Check shooting conditions - not too fast and not too many
-        enough_time_between_shots = self.shooting_timer >= self.shooting_interval
-        not_all_attacks_used = self.shooting_counter <= self.num_of_attacks
+        enough_time_between_shots = self.attack_timer >= self.attack_interval
+        not_all_attacks_used = self.attack_counter <= self.attack_num
 
         if enough_time_between_shots and not_all_attacks_used:
             # Set projectile's spawn position at enemy's coordinates
             self.attack_params['starting_pos'] = self.pos
             # ATTACKING!
             self.attack_type(**self.attack_params)
-            # Reset shooting timer
-            self.shooting_timer = 0
+            # Reset attack timer
+            self.attack_timer = 0
             # Bump attack counter
-            self.shooting_counter += 1
+            self.attack_counter += 1
 
     def update(self, time):
-        if self.attack:
+        if self.can_attack:
             self._attack(time)
 
     def hit(self, damage):
