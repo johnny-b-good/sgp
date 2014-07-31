@@ -36,6 +36,10 @@ class Enemy(DirtySprite):
             self.attack_type = attack['attack_type']
             self.attack_params = attack['attack_params']
 
+        self.can_move = False
+        if movement:
+            self.can_move = True
+
     def _move(self, time):
         self.dirty = 1
         pass
@@ -66,6 +70,8 @@ class Enemy(DirtySprite):
     def update(self, time):
         if self.can_attack:
             self._attack(time)
+        if self.can_move:
+            self._move(time)
 
     def hit(self, damage):
         self.health -= damage

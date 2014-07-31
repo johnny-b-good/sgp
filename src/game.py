@@ -25,6 +25,11 @@ class Game(object):
         self.fps = 60
         self.total_time = 0
 
+        self.playfield_scrolling_interval = 100
+        self.playfield_scrolling_timer = 0
+        self.playfield_scrolling_speed = 1  # pixels per interval
+        self.playfield_vertical_shift = 0
+
         # Load playfield image, blit it to the screen and update
         self.playfield_surface = resource_manager.images['field.png']
         # TODO - NO MAGIC ALLOWED
@@ -33,7 +38,7 @@ class Game(object):
 
         # Create inner and outer playfield boundaries
         # TODO - NO MAGIC ALLOWED
-        self.playfield_boundary, self.playfield_outer_boundary = self._create_boundaries(300)
+        self.playfield_boundary, self.playfield_outer_boundary = self._create_boundaries(100)
         common.playfield_boundary = self.playfield_boundary
 
         # Create heroine
@@ -56,7 +61,8 @@ class Game(object):
             self.handle_collisions()
             common.everything_group.update(time)
 
-            # Repaint screen with updated sprites
+            # Repaint screen with updated visible sprites
+            self.scroll_playfield(time)
             common.everything_group.clear(self.screen, self.playfield_surface)
             updated = common.everything_group.draw(self.screen)
             pygame.display.update(updated)
@@ -68,6 +74,7 @@ class Game(object):
     def _create_boundaries(self, thickness):
         """ Create inner and outer playfield boundaries """
         # TODO - disconnect calculations from surface
+        # TODO - don't "draw" sprites outside inner boundary?
         inner_boundary = self.playfield_surface.get_rect()
         outer_boundary = Rect(
             -thickness, -thickness,
@@ -90,6 +97,26 @@ class Game(object):
             else:
                 break
 
+    def scroll_playfield(self, time):
+        """ Scroll playfield to imitate flight """
+        self.playfield_scrolling_timer += time
+        if self.playfield_scrolling_timer >= self.playfield_scrolling_interval:
+            # print 'tick', self.playfield_vertical_shift
+            # TODO - No magic allowed
+            # TODO - Playfield class
+            new_playfield = pygame.Surface((720, 720))
+            self.playfield_vertical_shift += self.playfield_scrolling_speed
+            new_playfield.blit(
+                resource_manager.images['field.png'],
+                (0, self.playfield_vertical_shift),
+            )
+            self.playfield_surface = new_playfield
+
+            self.screen.blit(self.playfield_surface, Rect(0, 0, 720, 720))
+            pygame.display.flip()
+
+            self.playfield_scrolling_timer = 0
+
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -97,7 +124,7 @@ class Game(object):
                 sys.exit()
 
     def handle_user_input(self, time):
-        # TODO - set only states here, move attacks and movement to Heroine's update method
+        # TODO - set only states here, move attacks and movement to Heroine's update method?
         # Focus
         mod_keys = pygame.key.get_mods()
         if mod_keys & KMOD_SHIFT:
@@ -142,6 +169,17 @@ class Game(object):
         for sprite in common.all_shots_group:
             if not self.playfield_outer_boundary.contains(sprite.rect):
                 sprite.kill()
+
+            if not self.playfield_boundary.contains(sprite.rect):
+                sprite.visible = 0
+                sprite.dirty = 0
+            else:
+                sprite.visible = 1
+                sprite.dirty = 1
+
+
+
+
 
         # Heroine is hit by enemy projectile or enemy itself
         pygame.sprite.spritecollide(self.heroine.hitbox, common.enemy_shots_group, True)

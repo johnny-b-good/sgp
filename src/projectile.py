@@ -10,21 +10,14 @@ from helpers import Position
 
 
 class Projectile(DirtySprite):
-    """Abstract projectile class
+    """ Abstract projectile class """
 
-    Normally you should not use it , make a subclass, will ya?
-    """
     damage = 1
     image_id = 'pellet_pink.png'
     default_func = None
-    sprite_groups = [common.enemy_shots_group, common.all_shots_group, common.everything_group]
     pos = Position()
-
-    @classmethod
-    def setup_class_attrs(cls, image_id, damage):
-        """Setup class attributes"""
-        cls.image_id = image_id
-        cls.damage = damage
+    sprite_groups = [common.enemy_shots_group, common.all_shots_group,
+                     common.everything_group]
 
     def __init__(self, pos=(0, 0), func=None):
         super(Projectile, self).__init__(*self.sprite_groups)
@@ -44,11 +37,12 @@ class Projectile(DirtySprite):
 
 
 class HeroineBasicShot(Projectile):
-    """Basic heroine's shot - A glowing blue rectangle"""
+    """ Basic heroine's shot - A glowing blue rectangle """
     damage = 1
     image_id = 'shot3.png'
     default_func = movement.linear(angle=90, speed=1000)
-    sprite_groups = [common.heroine_shots_group, common.all_shots_group, common.everything_group]
+    sprite_groups = [common.heroine_shots_group, common.all_shots_group,
+                     common.everything_group]
 
 
 class RedPellet(Projectile):

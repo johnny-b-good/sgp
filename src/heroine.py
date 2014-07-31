@@ -79,28 +79,18 @@ class Heroine(DirtySprite):
 
     def _prevent_boundary_collision(self, x, y):
         """Check field boundary collision"""
-        # TODO - remove repetitions
-        # if self.hitbox.rect.bottom > self.playfield.bottom:
-        #     self.hitbox.rect.bottom = self.playfield.bottom
-        # elif self.hitbox.rect.top < self.playfield.top:
-        #     self.hitbox.rect.top = self.playfield.top
-        #
-        # if self.hitbox.rect.left < self.playfield.left:
-        #     self.hitbox.rect.left = self.playfield.left
-        # elif self.hitbox.rect.right > self.playfield.right:
-        #     self.hitbox.rect.right = self.playfield.right
 
-        if x < self.hitbox.rect.width / 2:
-            x = self.hitbox.rect.width / 2
-
-        if y < self.hitbox.rect.height / 2:
-            y = self.hitbox.rect.height / 2
-
+        # Right or left
         if x > self.playfield.width - self.hitbox.rect.width / 2:
             x = self.playfield.width - self.hitbox.rect.width / 2
+        elif x < self.hitbox.rect.width / 2:
+            x = self.hitbox.rect.width / 2
 
+        # Bottom or top
         if y > self.playfield.height - self.hitbox.rect.height / 2:
             y = self.playfield.height - self.hitbox.rect.height / 2
+        elif y < self.hitbox.rect.height / 2:
+            y = self.hitbox.rect.height / 2
 
         return x, y
 
@@ -125,6 +115,7 @@ class Heroine(DirtySprite):
 
     def update(self, *args):
         """Sprite animation goes here"""
+        # TODO - super
         pass
 
     def shoot(self, time):
@@ -134,6 +125,7 @@ class Heroine(DirtySprite):
         # TODO: POWERLEVEL!
         # TODO: Shot spawn spots
         # TODO Move shooting interval to self
+        # TODO - better naming, see Enemy class
 
         # five shots per second
         shooting_interval = 50
@@ -147,6 +139,7 @@ class Heroine(DirtySprite):
             self.shot_timer = 0
 
     def bomb(self, time):
+        # TODO
         pass
 
 

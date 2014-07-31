@@ -28,7 +28,7 @@ def raven1(pos):
         'attack_params': {
             'projectile_type': p.WhitePellet,
             'movement_type': m.aimed,
-            'movement_params': {'speed': 200}
+            'movement_params': {'speed': 300}
         }
     }
     return Raven, {'pos': pos, 'attack': attack}
