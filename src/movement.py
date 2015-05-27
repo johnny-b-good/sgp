@@ -15,8 +15,8 @@ def linear(angle=0, speed=100, **kwargs):
     def move(pos=(0, 0), time=0):
         time = float(time) / 1000
         distance = speed * time
-        dx = round(distance * angle_cos)
-        dy = round(distance * angle_sin)
+        dx = distance * angle_cos
+        dy = distance * angle_sin
         x, y = pos
         return x + dx, y - dy
 
